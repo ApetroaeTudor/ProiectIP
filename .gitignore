@@ -1,0 +1,10 @@
+.vs/
+bin/
+obj/
+TestResults/
+packages/
+*.nuget.props
+*.nuget.targets
+*.log
+.cache/
+.idea/
