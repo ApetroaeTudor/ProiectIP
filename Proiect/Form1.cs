@@ -18,18 +18,16 @@ namespace Proiect
         {
 
         }
-
-        private async void button1_Click(object sender, EventArgs e)
+        private async void btnPlay_Click(object sender, EventArgs e)
         {
             var mediaSource = await ReadFile(@"testing.wav");
-            if(mediaSource is not null)
+            if (mediaSource is not null)
             {
                 _player.Source = mediaSource;
                 _player.Volume = 100;
                 _player.Play();
             }
         }
-
         private async Task<MediaSource?> ReadFile(string fileName)
         {
             try
@@ -48,5 +46,6 @@ namespace Proiect
 
             return null;
         }
+
     }
 }
