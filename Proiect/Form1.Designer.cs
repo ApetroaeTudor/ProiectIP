@@ -297,6 +297,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load_1;
             panelPlayback.ResumeLayout(false);
             panelPlayback.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarVolume).EndInit();
