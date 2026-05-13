@@ -1,7 +1,8 @@
 <Solution>
-  <Project Path="Common\Common.csproj" Type="Classic C#" />
-  <Project Path="Core\Core.csproj" Type="Classic C#" />
+  <Project Path="Common\Common.csproj" />
+  <Project Path="Core\Core.csproj" />
   <Project Path="CustomExceptions/CustomExceptions.csproj" />
   <Project Path="FileManagement/FileManagement.csproj" />
+  <Project Path="Persistance/Persistance.csproj" Id="14db8137-464c-476e-983d-51baa046967f" />
   <Project Path="Proiect/Proiect.csproj" />
 </Solution>
