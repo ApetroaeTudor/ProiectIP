@@ -1,4 +1,5 @@
-﻿using Playback.Strategies;
+﻿using Common;
+using Playback.Strategies;
 
 namespace Playback.Playables;
 
@@ -6,11 +7,13 @@ public class PlaybackPlaylist : IPlayable
 {
     private List<IPlayable> _playables;
     private IPlaybackStrategy _playbackStrategy;
+    private PlaylistInfo _playlistInfo;
     
-    public PlaybackPlaylist()
+    public PlaybackPlaylist(PlaylistInfo playlistInfo)
     {
         _playbackStrategy = new SequentialStrategy();
         _playables = new List<IPlayable>();
+        _playlistInfo = playlistInfo;
     }
 
     public void AddPlayable(IPlayable playable)

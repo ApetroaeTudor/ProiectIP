@@ -29,7 +29,7 @@ public class PlaybackMaster
         _mediaPlayer.Pause();
     }
 
-    public void AlterVolume(double amount)
+    public void AdjustVolume(double amount)
     {
         double oldVolume = _mediaPlayer.Volume;
         if (oldVolume + amount < 0)
@@ -43,6 +43,18 @@ public class PlaybackMaster
         _mediaPlayer.Volume = oldVolume + amount;
     }
 
+    public void SkipSeconds(double seconds)
+    {
+        TimeSpan currentSeconds = _mediaPlayer.Position;
+        TimeSpan newPosition = currentSeconds.Add(TimeSpan.FromSeconds(seconds));
+
+        if (newPosition < TimeSpan.Zero)
+        {
+            newPosition = TimeSpan.Zero;
+        }
+        
+        _mediaPlayer.Position = newPosition;
+    }
     public void SetSource(MediaSource source)
     {
         _mediaPlayer.Source = source;

@@ -9,6 +9,7 @@
  ***************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 using Common;
+using FileManagement;
 
 namespace Persistance
 {
@@ -39,6 +40,16 @@ namespace Persistance
                       .WithMany()
                       .UsingEntity("PlaylistSongs");
             });
+        }
+
+        public static AppDbContext Create()
+        {
+                string dbPath = FileReader.GetSpecifiedDirPath("sqlite_testing.db", "DB"); 
+                var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionBuilder.UseSqlite($"Data Source={dbPath}");
+                var instance = new AppDbContext(optionBuilder.Options);
+                instance.Database.EnsureCreated();
+                return instance;
         }
     }
 }

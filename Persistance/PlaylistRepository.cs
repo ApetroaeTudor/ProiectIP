@@ -33,8 +33,10 @@ public class PlaylistRepository
 
     public async Task AddPlaylist(PlaylistInfo playlist)
     {
-        _context.Playlists.Add(playlist);
-        await _context.SaveChangesAsync();
+        var ctx = AppDbContext.Create();
+
+        ctx.Playlists.Add(playlist);
+        await ctx.SaveChangesAsync();
         _playlists.Add(playlist);
     }
 

@@ -10,6 +10,8 @@ using Windows.Media.Core;
 using Windows.Storage;
 using Common;
 using FileManagement;
+using Microsoft.Build.Tasks;
+using Persistance;
 using Playback;
 using Playback.Playables;
 using Playback.Strategies;
@@ -20,12 +22,18 @@ public class MediaManager : IDisposable
 {
     private PlaybackMaster _playbackMaster;
     private PlaybackQueue _queue;
+    private AppDbContext _connection;
+    private SongRepository _songRepository;
+    private PlaylistRepository _playlistRepository;
 
     public MediaManager()
     {
         _queue = new PlaybackQueue();
         _playbackMaster = new PlaybackMaster();
         _playbackMaster.OnSongEnded += PlayNextSong;
+        _connection = AppDbContext.Create();
+        _songRepository = new SongRepository(_connection);
+        _playlistRepository = new PlaylistRepository(_connection);
     }
 
     public async void PlayNextSong()
@@ -43,18 +51,13 @@ public class MediaManager : IDisposable
         }
         var song = (Song)next;
         SongInfo songInfo = song.GetSongInfo();
-
-        // if (_songRepository.getSongByFileName(songInfo.FileName))
-        // {
-        //     
-        // }
-
-        // daca nu e in repository, da load local
+        
         try
         {
             StorageFile songStorageFile = await FileReader.LoadSong(songInfo.FileName);
             MediaSource songMediaSource = FileProcessor.GetMediaSource(songStorageFile);
             _playbackMaster.SetSource(songMediaSource);
+            _playbackMaster.Play();
         }
         catch (Exception ex)
         {
@@ -82,7 +85,7 @@ public class MediaManager : IDisposable
         _queue.SetPlaybackStrategy(new SequentialStrategy());
     }
 
-    public async void AddSongToLibrary(string path)
+    public async Task AddSongToLibrary(string path)
     {
         StorageFile songStorageFile;
         if (Path.IsPathRooted(path))
@@ -98,13 +101,53 @@ public class MediaManager : IDisposable
         // save StorageFile to song repository cache
         // save SongInfo to song repository cache
         SongInfo songMetadata = await FileProcessor.GetSongInfoAsync(songStorageFile);
+        await _songRepository.AddSong(songMetadata);
+    }
+
+    public async Task AddPlaylistToLibrary(string playlistName, List<SongInfo> songs)
+    {
+        var playlist = new PlaylistInfo{
+            Id = "placeholder2",
+            PlaylistName = playlistName,
+            Songs = songs
+        };
+        await _playlistRepository.AddPlaylist(playlist);
+    }
+
+    public void AdjustVolume(double volume)
+    {
+        _playbackMaster.AdjustVolume(volume);
+    }
+
+    public void AddSongToQueue(string fileName)
+    {
+        SongInfo? songInfo = _songRepository.GetSongByFileName(Path.GetFileName(fileName));
+        if (songInfo is null)
+        {
+            return;
+            // eroare - se va arunca exceptie custom
+        }
+        _queue.AddPlayable(new Song(songInfo));
+    }
+
+    public void AddPlaylistToQueue(string playlistName)
+    {
+        PlaylistInfo? playlistInfo = _playlistRepository.GetPlaylistByName(playlistName);
+        if (playlistInfo is null)
+        {
+            return;
+            // eroare - se va arunca exceptie custom
+        }
+        _queue.AddPlayable(new PlaybackPlaylist(playlistInfo));
+    }
+
+    public void ChangeSongPosition(double seconds)
+    {
+        _playbackMaster.SkipSeconds(seconds);
     }
 
     public void Dispose()
     {
-        if (_playbackMaster != null)
-        {
-            _playbackMaster.OnSongEnded -= PlayNextSong;
-        }
+        _playbackMaster.OnSongEnded -= PlayNextSong;
     }
 }

@@ -29,15 +29,18 @@ public class SongRepository
         _songs.FirstOrDefault(s => s.SongTitle.Equals(title, StringComparison.OrdinalIgnoreCase));
 
 
+    public SongInfo? GetSongByFileName(string filename) =>
+        _songs.FirstOrDefault(s => s.FileName.Equals(filename, StringComparison.OrdinalIgnoreCase));
     
     public async Task AddSong(SongInfo song)
     {
+        var ctx = AppDbContext.Create();
+        
         if (!_songs.Contains(song))
         {
-            _context.Songs.Add(song);
+            ctx.Songs.Add(song);
             await _context.SaveChangesAsync();
-            _songs.Add(song);
-
+            ctx.Add(song);
         }
     }
 

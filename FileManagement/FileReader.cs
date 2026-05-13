@@ -35,12 +35,12 @@ public static class FileReader
     /// Aruncata cand argumentele transmise sunt nule, invalide sau calea rezultata
     /// este prea lunga pentru sistemul de operare.
     /// </exception>
-    private static string GetMediaDirectoryPath(string fileName)
+    public static string GetSpecifiedDirPath(string fileName, string dirName)
     {
         try
         {
             DirectoryInfo? directory = new DirectoryInfo(AppContext.BaseDirectory);
-            while (directory != null && !directory.GetDirectories("Media").Any())
+            while (directory != null && !directory.GetDirectories(dirName).Any())
             {
                 directory = directory.Parent;
             }
@@ -49,7 +49,7 @@ public static class FileReader
                 throw new DirectoryNotFoundException("ERROR - Nu s-a putut gasi directorul cu Media");
             }
             var mediaDirectory = directory.FullName;
-            return Path.Combine(mediaDirectory, $"Media\\{fileName}");
+            return Path.Combine(mediaDirectory, $"{dirName}\\{fileName}");
         }
         catch (ArgumentNullException argumentNullException)
         {
@@ -92,7 +92,7 @@ public static class FileReader
     {
         try
         {
-            string mediaDirectoryPath = GetMediaDirectoryPath("");
+            string mediaDirectoryPath = GetSpecifiedDirPath("", "Media");
             string? directoryName = Path.GetDirectoryName(mediaDirectoryPath);
             if (directoryName is null)
             {
@@ -108,6 +108,7 @@ public static class FileReader
         }
         catch (ArgumentException argumentException)
         {
+            // TODO: daca citesc un empty string, trebuie handled special
             throw new PathBuildingException($"ERROR - argumente invalide trimise {argumentException.Message}", argumentException);
         }
         catch (IOException)
@@ -138,11 +139,11 @@ public static class FileReader
     /// Aruncata cand calea construita nu este valida ca argument pentru sistem
     /// </exception>
     /// <exception cref="DirectoryNotFoundException">
-    /// Aruncata GetMediaDirectoryPath cand directorul Media nu exista
+    /// Aruncata GetSpecifiedDirPath cand directorul Media nu exista
     /// </exception>
     public static async Task<StorageFile> LoadSong(string fileName)
     {
-        string fileFullPath = GetMediaDirectoryPath(fileName);
+        string fileFullPath = GetSpecifiedDirPath(fileName, "Media");
         try
         {
             return await StorageFile.GetFileFromPathAsync(fileFullPath);
