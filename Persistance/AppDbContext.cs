@@ -1,0 +1,45 @@
+﻿/****************************************************************************************************
+ *                                                                                                  *
+ *  File:        SongRepository.cs                                                                  *
+ *  Copyright:   (c) 2026, Nichifor Codrin-George                                                   *
+ *  E-mail:      codirn-george.nichifor@student.tuiasi.ro                                           *
+ *  Description: Clasa mapeaza clasele model SongInfo si PlaylistInfo pe baza de date cu ajutorul   *
+ *               frameworkului EntityFramework ce se ocupa si de rezolvarea relatiei many to many   *
+ *               dintre cantece si playlisturi                                                      *
+ ***************************************************************************************************/
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using Common;
+
+namespace Persistance
+{
+    public class AppDbContext : DbContext
+    {
+        internal AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        internal DbSet<SongInfo> Songs => Set<SongInfo>();
+        internal DbSet<PlaylistInfo> Playlists => Set<PlaylistInfo>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SongInfo>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.SongTitle).HasMaxLength(200);
+                entity.Property(e => e.Artist).HasMaxLength(200);
+                entity.Property(e => e.Album).HasMaxLength(200);
+                entity.Property(e => e.FileName).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<PlaylistInfo>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.PlaylistName).IsRequired().HasMaxLength(200);
+
+                entity.HasMany(p => p.Songs)
+                      .WithMany()
+                      .UsingEntity("PlaylistSongs");
+            });
+        }
+    }
+}
