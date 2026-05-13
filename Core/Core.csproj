@@ -15,4 +15,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
+      <ProjectReference Include="..\FileManagement\FileManagement.csproj" />
+      <ProjectReference Include="..\Playback\Playback.csproj" />
+    </ItemGroup>
+
 </Project>
