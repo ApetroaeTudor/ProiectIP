@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,9 +9,12 @@
 	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" />
-	<Reference Include="Common">
-		<HintPath>..\Common\bin\Debug\net10.0-windows10.0.22621.0\Common.dll</HintPath>
-	</Reference>
+	<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.8" />
+
+</ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="..\Common\Common.csproj" />
+  <ProjectReference Include="..\CustomExceptions\CustomExceptions.csproj" />
 </ItemGroup>
 
 </Project>
