@@ -9,6 +9,7 @@
 
 
 using Common;
+using Microsoft.EntityFrameworkCore;
 using Persistance;
 
 public class SongRepository
@@ -19,7 +20,7 @@ public class SongRepository
     public SongRepository(AppDbContext context)
     {
         _context = context;
-        _songs = _context.Songs.ToList();
+        _songs = _context.Songs.AsNoTracking().ToList();
     }
 
     internal SongInfo? GetById(string id) =>
@@ -28,19 +29,18 @@ public class SongRepository
     public SongInfo? GetSongByTitle(string title) =>
         _songs.FirstOrDefault(s => s.SongTitle.Equals(title, StringComparison.OrdinalIgnoreCase));
 
-
     public SongInfo? GetSongByFileName(string filename) =>
         _songs.FirstOrDefault(s => s.FileName.Equals(filename, StringComparison.OrdinalIgnoreCase));
-    
+
     public async Task AddSong(SongInfo song)
     {
-        var ctx = AppDbContext.Create();
-        
+        var ctx = AppDbContext.Create(); 
+
         if (!_songs.Contains(song))
         {
             ctx.Songs.Add(song);
-            await _context.SaveChangesAsync();
-            ctx.Add(song);
+            await ctx.SaveChangesAsync();
+            _songs.Add(song); 
         }
     }
 
@@ -49,6 +49,7 @@ public class SongRepository
         var song = _songs.FirstOrDefault(s => s.Id == id);
         if (song is not null)
         {
+            _context.Attach(song);             
             _context.Songs.Remove(song);
             await _context.SaveChangesAsync();
             _songs.Remove(song);
