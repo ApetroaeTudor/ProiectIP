@@ -19,7 +19,7 @@ public class PlaylistRepository
     public PlaylistRepository(AppDbContext context)
     {
         _context = context;
-        _playlists = _context.Playlists.Include(p => p.Songs).ToList();
+        _playlists = _context.Playlists.Include(p => p.Songs).AsNoTracking().ToList();
     }
 
     public PlaylistInfo? GetPlaylistById(string id) =>
@@ -33,9 +33,11 @@ public class PlaylistRepository
 
     public async Task AddPlaylist(PlaylistInfo playlist)
     {
+        var ctx = AppDbContext.Create(); 
+
+        ctx.Playlists.Add(playlist);
+        await ctx.SaveChangesAsync();
         _playlists.Add(playlist);
-        _context.Playlists.Add(playlist);
-        await _context.SaveChangesAsync();
     }
 
     public async Task AddSongToPlaylist(string playlistId, string songId, SongRepository songRepo)
@@ -47,8 +49,12 @@ public class PlaylistRepository
         {
             if (!playlist.Songs.Contains(song))
             {
+                _context.Attach(playlist);                              
+                _context.Attach(song);                                  
                 playlist.Songs.Add(song);
                 await _context.SaveChangesAsync();
+                _context.Entry(playlist).State = EntityState.Detached; 
+                _context.Entry(song).State = EntityState.Detached;     
             }
         }
     }
@@ -59,10 +65,14 @@ public class PlaylistRepository
         var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
         var song = playlist?.Songs.FirstOrDefault(s => s.Id == songId);
 
-        if (song is not null)
+        if (playlist is not null && song is not null)
         {
-            playlist!.Songs.Remove(song);
+            _context.Attach(playlist);                              
+            _context.Attach(song);                                  
+            playlist.Songs.Remove(song);
             await _context.SaveChangesAsync();
+            _context.Entry(playlist).State = EntityState.Detached; 
+            _context.Entry(song).State = EntityState.Detached;     
         }
     }
 
@@ -71,6 +81,7 @@ public class PlaylistRepository
         var playlist = _playlists.FirstOrDefault(p => p.Id == id);
         if (playlist is not null)
         {
+            _context.Attach(playlist);              
             _context.Playlists.Remove(playlist);
             await _context.SaveChangesAsync();
             _playlists.Remove(playlist);
