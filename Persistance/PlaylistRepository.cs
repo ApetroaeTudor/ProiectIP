@@ -8,6 +8,7 @@
  ***************************************************************************************************/
 
 using Common;
+using CustomExceptions;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 
@@ -33,11 +34,31 @@ public class PlaylistRepository
 
     public async Task AddPlaylist(PlaylistInfo playlist)
     {
-        var ctx = AppDbContext.Create(); 
+        bool exists = await _context.Playlists.AnyAsync(p => p.Id == playlist.Id);
+        if (exists) return;
 
-        ctx.Playlists.Add(playlist);
-        await ctx.SaveChangesAsync();
-        _playlists.Add(playlist);
+        try
+        {
+            foreach (var song in playlist.Songs)
+            {
+                var trackedSong = _context.Songs.Local.FirstOrDefault(s => s.Id == song.Id);
+                if (trackedSong == null)
+                {
+                    _context.Songs.Attach(song);
+                }
+            }
+
+            _context.Playlists.Add(playlist);
+            await _context.SaveChangesAsync();
+            if (!_playlists.Any(p => p.Id == playlist.Id))
+            {
+                _playlists.Add(playlist);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new DatabaseOperationException("ERROR - nu a reusit salvarea playlist-ului! ");
+        }
     }
 
     public async Task AddSongToPlaylist(string playlistId, string songId, SongRepository songRepo)
@@ -47,19 +68,39 @@ public class PlaylistRepository
 
         if (playlist is not null && song is not null)
         {
-            if (!playlist.Songs.Contains(song))
+            if (!playlist.Songs.Any(s => s.Id == songId))
             {
-                _context.Attach(playlist);                              
-                _context.Attach(song);                                  
-                playlist.Songs.Add(song);
-                await _context.SaveChangesAsync();
-                _context.Entry(playlist).State = EntityState.Detached; 
-                _context.Entry(song).State = EntityState.Detached;     
+                try 
+                {
+                    if (_context.Entry(playlist).State == EntityState.Detached)
+                    {
+                        _context.Playlists.Attach(playlist);
+                    }
+
+                    if (_context.Entry(song).State == EntityState.Detached)
+                    {
+                        _context.Songs.Attach(song);
+                    }
+
+                    playlist.Songs.Add(song);
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    playlist.Songs.Remove(song);
+                    Console.WriteLine($"Eroare: {ex.Message}");
+                    throw;
+                }
+                finally
+                {
+                    _context.Entry(playlist).State = EntityState.Detached;
+                    _context.Entry(song).State = EntityState.Detached;
+                }
             }
         }
     }
-
-
+    
     public async Task RemoveSongFromPlaylist(string playlistId, string songId)
     {
         var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);

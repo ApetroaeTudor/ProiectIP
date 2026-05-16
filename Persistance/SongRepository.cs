@@ -34,16 +34,17 @@ public class SongRepository
 
     public async Task AddSong(SongInfo song)
     {
-        var ctx = AppDbContext.Create(); 
+        bool exists = await _context.Songs.AnyAsync(s => s.Id == song.Id);
 
-        if (!_songs.Contains(song))
+        if (!exists)
         {
-            ctx.Songs.Add(song);
-            await ctx.SaveChangesAsync();
-            _songs.Add(song); 
+            _context.Songs.Add(song);
+            await _context.SaveChangesAsync();
+        
+            if (!_songs.Any(s => s.Id == song.Id))
+                _songs.Add(song);
         }
     }
-
     public async Task RemoveSong(string id)
     {
         var song = _songs.FirstOrDefault(s => s.Id == id);

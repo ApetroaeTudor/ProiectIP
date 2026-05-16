@@ -58,6 +58,7 @@ namespace Proiect
             // fileList.Add(file2Metadata);
             // fileList.Add(file3Metadata);
             _manager.AddPlaylistToLibrary("Playlist2", fileList);
+            _manager.AddPlaylistToLibrary("Playlist1", fileList);
             _manager.AddPlaylistToQueue("Playlist2");
             
             _manager.AdjustVolume(100);
