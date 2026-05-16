@@ -9,6 +9,7 @@
  ***************************************************************************************************/
 using Microsoft.EntityFrameworkCore;
 using Common;
+using CustomExceptions;
 using FileManagement;
 
 namespace Persistance
@@ -44,12 +45,23 @@ namespace Persistance
 
         public static AppDbContext Create()
         {
-                string dbPath = FileReader.GetSpecifiedDirPath("sqlite_testing.db", "DB"); 
+            try
+            {
+                string dbPath = FileReader.GetSpecifiedDirPath("sqlite_testing.db", "DB");
                 var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
                 optionBuilder.UseSqlite($"Data Source={dbPath}");
                 var instance = new AppDbContext(optionBuilder.Options);
                 instance.Database.EnsureCreated();
                 return instance;
+            }
+            catch (DirectoryNotFoundException directoryNotFoundException)
+            {
+                throw new DatabaseConnectionException("ERROR - problema la conectarea la baza de date", directoryNotFoundException);
+            }
+            catch (Exception ex)
+            {
+                throw new DatabaseConnectionException("ERROR - eroare de tip neidentificat", ex);
+            }
         }
     }
 }

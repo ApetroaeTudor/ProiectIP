@@ -12,11 +12,11 @@ using System.Security.Cryptography;
 using System.Text;
 
 /// <summary>
-/// Clasa statica interna utilitara pentru generarea de identificatori unici
+/// Clasa statica utilitara pentru generarea de identificatori unici
 /// prin folosirea algoritmului SHA-256 asupra unui sir de caractere.
 /// Rezultatul este codificat in format Base64
 /// </summary>
-internal static class Hasher
+public static class Hasher
 {
     /// <summary>
     /// Calculeaza hash-ul SHA-256 al sirului de intrare si il returneaza

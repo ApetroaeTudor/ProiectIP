@@ -1,15 +1,32 @@
-﻿using Windows.Media.Core;
+﻿/************************************************************************************
+ *                                                                                  *
+ *  File:        PlaybackMaster.cs                                                  *
+ *  Copyright:   (c) 2026, Apetroae Tudor                                           *
+ *  E-mail:      tudor.apetroae@student.tuiasi.ro                                   *
+ *  Description: Clasa care gestioneaza redarea audio prin intermediul              *
+ *               unui MediaPlayer                                                   *
+ ************************************************************************************/
+
+using Windows.Media.Core;
 using Windows.Media.Playback;
-using Windows.UI.Composition.Interactions;
-using Playback.Playables;
 
 namespace Playback;
 
+/// <summary>
+/// Gestioneaza redarea audio, inclusiv play, pauza, volum si pozitie.
+/// </summary>
 public class PlaybackMaster
 {
     private MediaPlayer _mediaPlayer;
 
+    /// <summary>
+    /// Eveniment declansat la finalul unui cantec.
+    /// </summary>
     public event Action OnSongEnded;
+
+    /// <summary>
+    /// Initializeaza playerul si adauga un eveniment de sfarsit de cantec.
+    /// </summary>
     public PlaybackMaster()
     {
         _mediaPlayer = new MediaPlayer();
@@ -19,30 +36,44 @@ public class PlaybackMaster
         };
     }
 
+    /// <summary>
+    /// Porneste redarea.
+    /// </summary>
     public void Play()
     {
         _mediaPlayer.Play();
     }
 
+    /// <summary>
+    /// Pune redarea pe pauza.
+    /// </summary>
     public void Pause()
     {
         _mediaPlayer.Pause();
     }
 
+    /// <summary>
+    /// Seteaza volumul playerului. Valorile sunt limitate intre 0 si 100.
+    /// </summary>
+    /// <param name="amount">Valoarea volumului dorit.</param>
     public void AdjustVolume(double amount)
     {
-        double oldVolume = _mediaPlayer.Volume;
-        if (oldVolume + amount < 0)
+        if (amount < 0)
         {
-            _mediaPlayer.Volume = 0;
+            amount = 0;
         }
-        else if (oldVolume + amount > 100)
+
+        if (amount > 100)
         {
-            _mediaPlayer.Volume = 100;
+            amount = 100;
         }
-        _mediaPlayer.Volume = oldVolume + amount;
+        _mediaPlayer.Volume = amount;
     }
 
+    /// <summary>
+    /// Sare cu un numar de secunde fata de pozitia curenta. Nu depaseste inceputul cantecului.
+    /// </summary>
+    /// <param name="seconds">Numarul de secunde de sarit (pozitiv sau negativ).</param>
     public void SkipSeconds(double seconds)
     {
         TimeSpan currentSeconds = _mediaPlayer.Position;
@@ -55,9 +86,13 @@ public class PlaybackMaster
         
         _mediaPlayer.Position = newPosition;
     }
+
+    /// <summary>
+    /// Seteaza sursa media pentru player.
+    /// </summary>
+    /// <param name="source">Sursa media de redat.</param>
     public void SetSource(MediaSource source)
     {
         _mediaPlayer.Source = source;
     }
-    
 }

@@ -9,6 +9,7 @@
 
 
 using Common;
+
 using Persistance;
 
 public class SongRepository
@@ -40,7 +41,7 @@ public class SongRepository
         {
             ctx.Songs.Add(song);
             await _context.SaveChangesAsync();
-            ctx.Add(song);
+            _songs.Add(song);
         }
     }
 

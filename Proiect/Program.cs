@@ -1,3 +1,8 @@
+using System;
+using System.Threading;
+using System.Windows.Forms;
+using CustomExceptions;
+
 namespace Proiect
 {
     internal static class Program
@@ -8,10 +13,41 @@ namespace Proiect
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += GlobalThreadExceptionHandler;
+
             Application.Run(new Form1());
+        }
+
+        private static void GlobalThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
+        {
+            Exception ex = e.Exception;
+
+            switch (ex)
+            {
+                case LibraryManagementException libraryManagementException:
+                    MessageBox.Show(libraryManagementException.Message, "LibraryManagement", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    break;
+
+                case MediaManagementException mediaManagementException:
+                    MessageBox.Show(mediaManagementException.Message, "MediaManagement", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    break;
+
+                default:
+                    DialogResult res = MessageBox.Show($"Eroare Neprevazuta {ex.Message}", "Eroare",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Stop);
+
+                    if (res == DialogResult.No)
+                    {
+                        Application.Exit();
+                    }
+
+                    break;
+            }
         }
     }
 }
