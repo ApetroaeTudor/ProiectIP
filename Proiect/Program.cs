@@ -3,7 +3,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CustomExceptions;
 
-namespace Proiect
+namespace Proiect_Ip
 {
     internal static class Program
     {
