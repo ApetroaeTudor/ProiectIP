@@ -209,7 +209,7 @@
             btnPrev.TabIndex = 3;
             btnPrev.Text = "<<";
             btnPrev.UseVisualStyleBackColor = true;
-            btnPrev.Click += btnPrev_Click;
+            // btnPrev.Click += btnPrev_Click;
             // 
             // lblTotalTime
             // 
@@ -512,7 +512,7 @@
             btnAddFolder.TabIndex = 1;
             btnAddFolder.Text = "+Folder";
             btnAddFolder.UseVisualStyleBackColor = true;
-            btnAddFolder.Click += btnAddFolder_Click;
+            // btnAddFolder.Click += btnAddFolder_Click;
             // 
             // btnAddFile
             // 

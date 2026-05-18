@@ -18,7 +18,8 @@ namespace Playback;
 public class PlaybackMaster
 {
     private MediaPlayer _mediaPlayer;
-
+    public bool SongsLoaded { get; set; } = false;
+    
     /// <summary>
     /// Eveniment declansat la finalul unui cantec.
     /// </summary>
@@ -94,5 +95,59 @@ public class PlaybackMaster
     public void SetSource(MediaSource source)
     {
         _mediaPlayer.Source = source;
+    }
+
+    /// <summary>
+    /// Returneaza pozitia curenta in cantecul redat
+    /// </summary>
+    /// <returns>
+    /// Pozitia curenta ca TimeSpan, sau TimeSpan.
+    /// Zero daca playerul nu este initializat
+    /// </returns>
+    public TimeSpan GetCurrentSongPosition()
+    {
+        if (_mediaPlayer?.PlaybackSession == null)
+        {
+            return TimeSpan.Zero;
+        }
+
+        return _mediaPlayer.PlaybackSession.Position;
+    }
+
+    /// <summary>
+    /// Returneaza durata totala a cantecului curent.
+    /// </summary>
+    /// <returns>
+    /// Durata cantecului ca TimeSpan, sau TimeSpan. Zero daca playerul nu este initializat
+    /// </returns>
+    public TimeSpan GetCurrentSongDuration()
+    {
+        if (_mediaPlayer?.PlaybackSession == null)
+        {
+            return TimeSpan.Zero;
+        }
+
+        return _mediaPlayer.PlaybackSession.NaturalDuration;
+    }
+
+    /// <summary>
+    /// Reia redarea unui cantec aflat pe pauza
+    /// </summary>
+    public void Resume()
+    {
+        if (_mediaPlayer?.PlaybackSession == null)
+        {
+            return;
+        }
+        _mediaPlayer.Play();
+    }
+
+    /// <summary>
+    /// Reseteaza playerul, eliminand sursa media incarcata si marcand starea ca fara cantec
+    /// </summary>
+    public void Clear()
+    {
+        _mediaPlayer.Source = null;
+        SongsLoaded = false;
     }
 }

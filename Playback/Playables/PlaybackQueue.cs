@@ -68,4 +68,13 @@ public class PlaybackQueue : IPlayable
             playable.SetPlaybackStrategy(playbackStrategy);
         }
     }
+
+    /// <summary>
+    /// Goleste coada de redare, eliminand toate elementele din lista.
+    /// </summary>
+    public void Clear()
+    {
+        _playables.Clear();
+    }
+    
 }

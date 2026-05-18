@@ -34,9 +34,6 @@ public class PlaylistRepository
 
     public async Task AddPlaylist(PlaylistInfo playlist)
     {
-        bool exists = await _context.Playlists.AnyAsync(p => p.Id == playlist.Id);
-        if (exists) return;
-
         try
         {
             foreach (var song in playlist.Songs)
@@ -126,6 +123,18 @@ public class PlaylistRepository
             _context.Playlists.Remove(playlist);
             await _context.SaveChangesAsync();
             _playlists.Remove(playlist);
+        }
+    }
+    
+    public void RemoveSongFromMemory(string songId)
+    {
+        foreach (var playlist in _playlists)
+        {
+            var songToRemove = playlist.Songs.FirstOrDefault(s => s.Id == songId);
+            if (songToRemove != null)
+            {
+                playlist.Songs.Remove(songToRemove);
+            }
         }
     }
 }
