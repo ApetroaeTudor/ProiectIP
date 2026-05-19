@@ -39,6 +39,11 @@ public static class FileReader
     {
         try
         {
+            if (fileName == null || dirName == null)
+            {
+                throw new ArgumentNullException("Argumentele nu pot fi nule");
+            }
+
             DirectoryInfo? directory = new DirectoryInfo(AppContext.BaseDirectory);
             while (directory != null && !directory.GetDirectories(dirName).Any())
             {
