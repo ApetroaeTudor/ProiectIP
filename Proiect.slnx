@@ -1,9 +1,10 @@
 <Solution>
-  <Project Path="Common\Common.csproj" Type="Classic C#" />
-  <Project Path="Core\Core.csproj" Type="Classic C#" />
+  <Project Path="Common\Common.csproj" />
+  <Project Path="Core\Core.csproj" />
   <Project Path="CustomExceptions/CustomExceptions.csproj" />
   <Project Path="FileManagement/FileManagement.csproj" />
     <Project Path="Persistance/Persistance.csproj" />
-    <Project Path="Playback\Playback.csproj" Type="Classic C#" />
+    <Project Path="Playback\Playback.csproj" />
     <Project Path="Proiect/Proiect.csproj" />
+  <Project Path="TestingStuff/TestingStuff.csproj" />
 </Solution>
