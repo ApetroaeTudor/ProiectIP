@@ -29,18 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            panelPlayback = new Panel();
-            lblMaxVol = new Label();
-            lblMinVol = new Label();
-            trackBarVolume = new TrackBar();
-            btnMute = new Button();
-            btnPause = new Button();
-            btnNext = new Button();
-            btnPlay = new Button();
-            btnPrev = new Button();
-            lblTotalTime = new Label();
-            lblCurrentTime = new Label();
-            trackBarSeek = new TrackBar();
             panelNav = new Panel();
             radioButtonStorage = new RadioButton();
             radioButtonPlaylists = new RadioButton();
@@ -59,7 +47,7 @@
             buttonClearQueue = new Button();
             btnRemoveQueue = new Button();
             labelQueue = new Label();
-            panelCentral = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
             TabControl = new TabControl();
             tabPageLibrary = new TabPage();
             dataGridViewLibrary = new DataGridView();
@@ -68,10 +56,10 @@
             ColumnDuration = new DataGridViewTextBoxColumn();
             textBoxSearchBar = new TextBox();
             lblSearchBar = new Label();
-            btnAddFolder = new Button();
             btnAddFile = new Button();
             tabPlaylists = new TabPage();
             splitContainer1 = new SplitContainer();
+            btnAddPlaylistToQueue = new Button();
             lblPlaylists = new Label();
             buttonDeletePlaylist = new Button();
             buttonRenamePlaylist = new Button();
@@ -89,15 +77,26 @@
             labelStocare = new Label();
             progressBarStorage = new ProgressBar();
             labelSettingsStorage = new Label();
-            timer1 = new System.Windows.Forms.Timer(components);
-            panelPlayback.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBarVolume).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trackBarSeek).BeginInit();
+            panelCentral = new Panel();
+            trackBarSeek = new TrackBar();
+            lblCurrentTime = new Label();
+            lblTotalTime = new Label();
+            btnPlay = new Button();
+            btnNext = new Button();
+            btnPause = new Button();
+            btnMute = new Button();
+            trackBarVolume = new TrackBar();
+            lblMinVol = new Label();
+            lblMaxVol = new Label();
+            panelPlayback = new Panel();
+            textBoxStrategie = new TextBox();
+            btnSequential = new Button();
+            btnRepeat = new Button();
+            btnShuffle = new Button();
             panelNav.SuspendLayout();
             panelQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewQueue).BeginInit();
             contextMenuStripLibrary.SuspendLayout();
-            panelCentral.SuspendLayout();
             TabControl.SuspendLayout();
             tabPageLibrary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewLibrary).BeginInit();
@@ -108,137 +107,11 @@
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewPlaylist).BeginInit();
             tabSettingsStorage.SuspendLayout();
+            panelCentral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarSeek).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBarVolume).BeginInit();
+            panelPlayback.SuspendLayout();
             SuspendLayout();
-            // 
-            // panelPlayback
-            // 
-            panelPlayback.BackColor = Color.LightSlateGray;
-            panelPlayback.Controls.Add(lblMaxVol);
-            panelPlayback.Controls.Add(lblMinVol);
-            panelPlayback.Controls.Add(trackBarVolume);
-            panelPlayback.Controls.Add(btnMute);
-            panelPlayback.Controls.Add(btnPause);
-            panelPlayback.Controls.Add(btnNext);
-            panelPlayback.Controls.Add(btnPlay);
-            panelPlayback.Controls.Add(btnPrev);
-            panelPlayback.Controls.Add(lblTotalTime);
-            panelPlayback.Controls.Add(lblCurrentTime);
-            panelPlayback.Controls.Add(trackBarSeek);
-            panelPlayback.Dock = DockStyle.Bottom;
-            panelPlayback.Location = new Point(0, 520);
-            panelPlayback.Margin = new Padding(2);
-            panelPlayback.Name = "panelPlayback";
-            panelPlayback.Size = new Size(1460, 140);
-            panelPlayback.TabIndex = 0;
-            // 
-            // lblMaxVol
-            // 
-            lblMaxVol.AutoSize = true;
-            lblMaxVol.Location = new Point(1248, 115);
-            lblMaxVol.Margin = new Padding(2, 0, 2, 0);
-            lblMaxVol.Name = "lblMaxVol";
-            lblMaxVol.Size = new Size(25, 15);
-            lblMaxVol.TabIndex = 10;
-            lblMaxVol.Text = "100";
-            // 
-            // lblMinVol
-            // 
-            lblMinVol.AutoSize = true;
-            lblMinVol.Location = new Point(1090, 115);
-            lblMinVol.Margin = new Padding(2, 0, 2, 0);
-            lblMinVol.Name = "lblMinVol";
-            lblMinVol.Size = new Size(13, 15);
-            lblMinVol.TabIndex = 9;
-            lblMinVol.Text = "0";
-            // 
-            // trackBarVolume
-            // 
-            trackBarVolume.Location = new Point(1093, 77);
-            trackBarVolume.Margin = new Padding(2);
-            trackBarVolume.Name = "trackBarVolume";
-            trackBarVolume.Size = new Size(180, 45);
-            trackBarVolume.TabIndex = 8;
-            // 
-            // btnMute
-            // 
-            btnMute.Location = new Point(1118, 8);
-            btnMute.Margin = new Padding(2);
-            btnMute.Name = "btnMute";
-            btnMute.Size = new Size(107, 44);
-            btnMute.TabIndex = 7;
-            btnMute.Text = "Mute";
-            btnMute.UseVisualStyleBackColor = true;
-            // 
-            // btnPause
-            // 
-            btnPause.Location = new Point(882, 67);
-            btnPause.Margin = new Padding(2);
-            btnPause.Name = "btnPause";
-            btnPause.Size = new Size(118, 33);
-            btnPause.TabIndex = 6;
-            btnPause.Text = "Pause";
-            btnPause.UseVisualStyleBackColor = true;
-            // 
-            // btnNext
-            // 
-            btnNext.Location = new Point(736, 67);
-            btnNext.Margin = new Padding(2);
-            btnNext.Name = "btnNext";
-            btnNext.Size = new Size(102, 33);
-            btnNext.TabIndex = 5;
-            btnNext.Text = ">>";
-            btnNext.UseVisualStyleBackColor = true;
-            btnNext.Click += btnNext_Click;
-            // 
-            // btnPlay
-            // 
-            btnPlay.Location = new Point(525, 67);
-            btnPlay.Margin = new Padding(2);
-            btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(180, 33);
-            btnPlay.TabIndex = 4;
-            btnPlay.Text = "Play";
-            btnPlay.UseVisualStyleBackColor = true;
-            // 
-            // btnPrev
-            // 
-            btnPrev.Location = new Point(394, 67);
-            btnPrev.Margin = new Padding(2);
-            btnPrev.Name = "btnPrev";
-            btnPrev.Size = new Size(100, 33);
-            btnPrev.TabIndex = 3;
-            btnPrev.Text = "<<";
-            btnPrev.UseVisualStyleBackColor = true;
-            // btnPrev.Click += btnPrev_Click;
-            // 
-            // lblTotalTime
-            // 
-            lblTotalTime.AutoSize = true;
-            lblTotalTime.Location = new Point(946, 37);
-            lblTotalTime.Margin = new Padding(2, 0, 2, 0);
-            lblTotalTime.Name = "lblTotalTime";
-            lblTotalTime.Size = new Size(34, 15);
-            lblTotalTime.TabIndex = 2;
-            lblTotalTime.Text = "00:00";
-            // 
-            // lblCurrentTime
-            // 
-            lblCurrentTime.AutoSize = true;
-            lblCurrentTime.Location = new Point(328, 37);
-            lblCurrentTime.Margin = new Padding(2, 0, 2, 0);
-            lblCurrentTime.Name = "lblCurrentTime";
-            lblCurrentTime.Size = new Size(34, 15);
-            lblCurrentTime.TabIndex = 1;
-            lblCurrentTime.Text = "00:00";
-            // 
-            // trackBarSeek
-            // 
-            trackBarSeek.Location = new Point(331, 8);
-            trackBarSeek.Margin = new Padding(2);
-            trackBarSeek.Name = "trackBarSeek";
-            trackBarSeek.Size = new Size(649, 45);
-            trackBarSeek.TabIndex = 0;
-            trackBarSeek.Value = 1;
             // 
             // panelNav
             // 
@@ -263,7 +136,6 @@
             radioButtonStorage.Name = "radioButtonStorage";
             radioButtonStorage.Size = new Size(98, 26);
             radioButtonStorage.TabIndex = 9;
-            radioButtonStorage.TabStop = true;
             radioButtonStorage.Text = "Storage";
             radioButtonStorage.UseVisualStyleBackColor = true;
             radioButtonStorage.CheckedChanged += radioButtonStorage_CheckedChanged;
@@ -278,7 +150,6 @@
             radioButtonPlaylists.Name = "radioButtonPlaylists";
             radioButtonPlaylists.Size = new Size(103, 26);
             radioButtonPlaylists.TabIndex = 8;
-            radioButtonPlaylists.TabStop = true;
             radioButtonPlaylists.Text = "Playlists";
             radioButtonPlaylists.UseVisualStyleBackColor = true;
             radioButtonPlaylists.CheckedChanged += radioButtonPlaylists_CheckedChanged;
@@ -286,6 +157,7 @@
             // radioButtonLibrary
             // 
             radioButtonLibrary.AutoSize = true;
+            radioButtonLibrary.Checked = true;
             radioButtonLibrary.Font = new Font("Microsoft Sans Serif", 13F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             radioButtonLibrary.ForeColor = Color.Navy;
             radioButtonLibrary.Location = new Point(24, 59);
@@ -320,6 +192,7 @@
             dataGridViewQueue.Location = new Point(891, 77);
             dataGridViewQueue.Margin = new Padding(4, 3, 4, 3);
             dataGridViewQueue.Name = "dataGridViewQueue";
+            dataGridViewQueue.ReadOnly = true;
             dataGridViewQueue.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewQueue.Size = new Size(352, 348);
             dataGridViewQueue.TabIndex = 12;
@@ -328,16 +201,19 @@
             // 
             dataGridViewTextBoxColumn4.HeaderText = "Title";
             dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            dataGridViewTextBoxColumn4.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn5
             // 
             dataGridViewTextBoxColumn5.HeaderText = "Artist";
             dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            dataGridViewTextBoxColumn5.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn6
             // 
             dataGridViewTextBoxColumn6.HeaderText = "Duration";
             dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            dataGridViewTextBoxColumn6.ReadOnly = true;
             // 
             // contextMenuStripLibrary
             // 
@@ -414,16 +290,9 @@
             labelQueue.TabIndex = 0;
             labelQueue.Text = "Queue";
             // 
-            // panelCentral
+            // timer1
             // 
-            panelCentral.BackColor = SystemColors.ActiveCaption;
-            panelCentral.Controls.Add(TabControl);
-            panelCentral.Dock = DockStyle.Left;
-            panelCentral.Location = new Point(212, 0);
-            panelCentral.Margin = new Padding(2);
-            panelCentral.Name = "panelCentral";
-            panelCentral.Size = new Size(890, 520);
-            panelCentral.TabIndex = 3;
+            timer1.Tick += timer1_Tick;
             // 
             // TabControl
             // 
@@ -446,7 +315,6 @@
             tabPageLibrary.Controls.Add(dataGridViewLibrary);
             tabPageLibrary.Controls.Add(textBoxSearchBar);
             tabPageLibrary.Controls.Add(lblSearchBar);
-            tabPageLibrary.Controls.Add(btnAddFolder);
             tabPageLibrary.Controls.Add(btnAddFile);
             tabPageLibrary.Location = new Point(4, 24);
             tabPageLibrary.Margin = new Padding(2);
@@ -465,6 +333,7 @@
             dataGridViewLibrary.Location = new Point(22, 125);
             dataGridViewLibrary.Margin = new Padding(4, 3, 4, 3);
             dataGridViewLibrary.Name = "dataGridViewLibrary";
+            dataGridViewLibrary.ReadOnly = true;
             dataGridViewLibrary.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewLibrary.Size = new Size(341, 362);
             dataGridViewLibrary.TabIndex = 6;
@@ -473,16 +342,19 @@
             // 
             ColumnTitle.HeaderText = "Title";
             ColumnTitle.Name = "ColumnTitle";
+            ColumnTitle.ReadOnly = true;
             // 
             // ColumnArtist
             // 
             ColumnArtist.HeaderText = "Artist";
             ColumnArtist.Name = "ColumnArtist";
+            ColumnArtist.ReadOnly = true;
             // 
             // ColumnDuration
             // 
             ColumnDuration.HeaderText = "Duration";
             ColumnDuration.Name = "ColumnDuration";
+            ColumnDuration.ReadOnly = true;
             // 
             // textBoxSearchBar
             // 
@@ -502,17 +374,6 @@
             lblSearchBar.TabIndex = 4;
             lblSearchBar.Text = "Search";
             lblSearchBar.Click += lblSearchBar_Click;
-            // 
-            // btnAddFolder
-            // 
-            btnAddFolder.Location = new Point(173, 38);
-            btnAddFolder.Margin = new Padding(4, 3, 4, 3);
-            btnAddFolder.Name = "btnAddFolder";
-            btnAddFolder.Size = new Size(99, 37);
-            btnAddFolder.TabIndex = 1;
-            btnAddFolder.Text = "+Folder";
-            btnAddFolder.UseVisualStyleBackColor = true;
-            // btnAddFolder.Click += btnAddFolder_Click;
             // 
             // btnAddFile
             // 
@@ -546,6 +407,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(btnAddPlaylistToQueue);
             splitContainer1.Panel1.Controls.Add(lblPlaylists);
             splitContainer1.Panel1.Controls.Add(buttonDeletePlaylist);
             splitContainer1.Panel1.Controls.Add(buttonRenamePlaylist);
@@ -564,6 +426,16 @@
             splitContainer1.SplitterWidth = 5;
             splitContainer1.TabIndex = 0;
             // 
+            // btnAddPlaylistToQueue
+            // 
+            btnAddPlaylistToQueue.Location = new Point(143, 354);
+            btnAddPlaylistToQueue.Name = "btnAddPlaylistToQueue";
+            btnAddPlaylistToQueue.Size = new Size(128, 53);
+            btnAddPlaylistToQueue.TabIndex = 5;
+            btnAddPlaylistToQueue.Text = "AddPlaylistToQueue";
+            btnAddPlaylistToQueue.UseVisualStyleBackColor = true;
+            btnAddPlaylistToQueue.Click += btnAddPlaylistToQueue_Click;
+            // 
             // lblPlaylists
             // 
             lblPlaylists.AutoSize = true;
@@ -576,7 +448,7 @@
             // 
             // buttonDeletePlaylist
             // 
-            buttonDeletePlaylist.Location = new Point(70, 425);
+            buttonDeletePlaylist.Location = new Point(16, 421);
             buttonDeletePlaylist.Margin = new Padding(4, 3, 4, 3);
             buttonDeletePlaylist.Name = "buttonDeletePlaylist";
             buttonDeletePlaylist.Size = new Size(102, 38);
@@ -587,7 +459,7 @@
             // 
             // buttonRenamePlaylist
             // 
-            buttonRenamePlaylist.Location = new Point(70, 367);
+            buttonRenamePlaylist.Location = new Point(16, 361);
             buttonRenamePlaylist.Margin = new Padding(4, 3, 4, 3);
             buttonRenamePlaylist.Name = "buttonRenamePlaylist";
             buttonRenamePlaylist.Size = new Size(102, 38);
@@ -598,7 +470,7 @@
             // 
             // buttonNewPlaylist
             // 
-            buttonNewPlaylist.Location = new Point(70, 307);
+            buttonNewPlaylist.Location = new Point(16, 307);
             buttonNewPlaylist.Margin = new Padding(4, 3, 4, 3);
             buttonNewPlaylist.Name = "buttonNewPlaylist";
             buttonNewPlaylist.Size = new Size(102, 38);
@@ -625,6 +497,7 @@
             dataGridViewPlaylist.Location = new Point(16, 58);
             dataGridViewPlaylist.Margin = new Padding(4, 3, 4, 3);
             dataGridViewPlaylist.Name = "dataGridViewPlaylist";
+            dataGridViewPlaylist.ReadOnly = true;
             dataGridViewPlaylist.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewPlaylist.Size = new Size(400, 326);
             dataGridViewPlaylist.TabIndex = 11;
@@ -633,16 +506,19 @@
             // 
             dataGridViewTextBoxColumn1.HeaderText = "Title";
             dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn2
             // 
             dataGridViewTextBoxColumn2.HeaderText = "Artist";
             dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
             // dataGridViewTextBoxColumn3
             // 
             dataGridViewTextBoxColumn3.HeaderText = "Duration";
             dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
             // buttonDeleteSongFromPlaylist
             // 
@@ -729,9 +605,176 @@
             labelSettingsStorage.TabIndex = 0;
             labelSettingsStorage.Text = "Gestionare Stocare ";
             // 
-            // timer1
+            // panelCentral
             // 
-            timer1.Tick += timer1_Tick;
+            panelCentral.BackColor = SystemColors.ActiveCaption;
+            panelCentral.Controls.Add(TabControl);
+            panelCentral.Dock = DockStyle.Left;
+            panelCentral.Location = new Point(212, 0);
+            panelCentral.Margin = new Padding(2);
+            panelCentral.Name = "panelCentral";
+            panelCentral.Size = new Size(890, 520);
+            panelCentral.TabIndex = 3;
+            // 
+            // trackBarSeek
+            // 
+            trackBarSeek.Location = new Point(331, 8);
+            trackBarSeek.Margin = new Padding(2);
+            trackBarSeek.Name = "trackBarSeek";
+            trackBarSeek.Size = new Size(649, 45);
+            trackBarSeek.TabIndex = 0;
+            trackBarSeek.Value = 1;
+            // 
+            // lblCurrentTime
+            // 
+            lblCurrentTime.AutoSize = true;
+            lblCurrentTime.Location = new Point(328, 37);
+            lblCurrentTime.Margin = new Padding(2, 0, 2, 0);
+            lblCurrentTime.Name = "lblCurrentTime";
+            lblCurrentTime.Size = new Size(34, 15);
+            lblCurrentTime.TabIndex = 1;
+            lblCurrentTime.Text = "00:00";
+            // 
+            // lblTotalTime
+            // 
+            lblTotalTime.AutoSize = true;
+            lblTotalTime.Location = new Point(946, 37);
+            lblTotalTime.Margin = new Padding(2, 0, 2, 0);
+            lblTotalTime.Name = "lblTotalTime";
+            lblTotalTime.Size = new Size(34, 15);
+            lblTotalTime.TabIndex = 2;
+            lblTotalTime.Text = "00:00";
+            // 
+            // btnPlay
+            // 
+            btnPlay.Location = new Point(525, 67);
+            btnPlay.Margin = new Padding(2);
+            btnPlay.Name = "btnPlay";
+            btnPlay.Size = new Size(180, 33);
+            btnPlay.TabIndex = 4;
+            btnPlay.Text = "Play";
+            btnPlay.UseVisualStyleBackColor = true;
+            // 
+            // btnNext
+            // 
+            btnNext.Location = new Point(736, 67);
+            btnNext.Margin = new Padding(2);
+            btnNext.Name = "btnNext";
+            btnNext.Size = new Size(102, 33);
+            btnNext.TabIndex = 5;
+            btnNext.Text = ">>";
+            btnNext.UseVisualStyleBackColor = true;
+            btnNext.Click += btnNext_Click;
+            // 
+            // btnPause
+            // 
+            btnPause.Location = new Point(882, 67);
+            btnPause.Margin = new Padding(2);
+            btnPause.Name = "btnPause";
+            btnPause.Size = new Size(118, 33);
+            btnPause.TabIndex = 6;
+            btnPause.Text = "Pause";
+            btnPause.UseVisualStyleBackColor = true;
+            // 
+            // btnMute
+            // 
+            btnMute.Location = new Point(1118, 8);
+            btnMute.Margin = new Padding(2);
+            btnMute.Name = "btnMute";
+            btnMute.Size = new Size(107, 44);
+            btnMute.TabIndex = 7;
+            btnMute.Text = "Mute";
+            btnMute.UseVisualStyleBackColor = true;
+            // 
+            // trackBarVolume
+            // 
+            trackBarVolume.Location = new Point(1093, 77);
+            trackBarVolume.Margin = new Padding(2);
+            trackBarVolume.Name = "trackBarVolume";
+            trackBarVolume.Size = new Size(180, 45);
+            trackBarVolume.TabIndex = 8;
+            // 
+            // lblMinVol
+            // 
+            lblMinVol.AutoSize = true;
+            lblMinVol.Location = new Point(1090, 115);
+            lblMinVol.Margin = new Padding(2, 0, 2, 0);
+            lblMinVol.Name = "lblMinVol";
+            lblMinVol.Size = new Size(13, 15);
+            lblMinVol.TabIndex = 9;
+            lblMinVol.Text = "0";
+            // 
+            // lblMaxVol
+            // 
+            lblMaxVol.AutoSize = true;
+            lblMaxVol.Location = new Point(1248, 115);
+            lblMaxVol.Margin = new Padding(2, 0, 2, 0);
+            lblMaxVol.Name = "lblMaxVol";
+            lblMaxVol.Size = new Size(25, 15);
+            lblMaxVol.TabIndex = 10;
+            lblMaxVol.Text = "100";
+            // 
+            // panelPlayback
+            // 
+            panelPlayback.BackColor = Color.LightSlateGray;
+            panelPlayback.Controls.Add(textBoxStrategie);
+            panelPlayback.Controls.Add(btnSequential);
+            panelPlayback.Controls.Add(btnRepeat);
+            panelPlayback.Controls.Add(btnShuffle);
+            panelPlayback.Controls.Add(lblMaxVol);
+            panelPlayback.Controls.Add(lblMinVol);
+            panelPlayback.Controls.Add(trackBarVolume);
+            panelPlayback.Controls.Add(btnMute);
+            panelPlayback.Controls.Add(btnPause);
+            panelPlayback.Controls.Add(btnNext);
+            panelPlayback.Controls.Add(btnPlay);
+            panelPlayback.Controls.Add(lblTotalTime);
+            panelPlayback.Controls.Add(lblCurrentTime);
+            panelPlayback.Controls.Add(trackBarSeek);
+            panelPlayback.Dock = DockStyle.Bottom;
+            panelPlayback.Location = new Point(0, 520);
+            panelPlayback.Margin = new Padding(2);
+            panelPlayback.Name = "panelPlayback";
+            panelPlayback.Size = new Size(1460, 140);
+            panelPlayback.TabIndex = 0;
+            // 
+            // textBoxStrategie
+            // 
+            textBoxStrategie.Location = new Point(143, 66);
+            textBoxStrategie.Name = "textBoxStrategie";
+            textBoxStrategie.ReadOnly = true;
+            textBoxStrategie.Size = new Size(85, 23);
+            textBoxStrategie.TabIndex = 14;
+            // 
+            // btnSequential
+            // 
+            btnSequential.Location = new Point(24, 99);
+            btnSequential.Name = "btnSequential";
+            btnSequential.Size = new Size(90, 31);
+            btnSequential.TabIndex = 13;
+            btnSequential.Text = "Sequential";
+            btnSequential.UseVisualStyleBackColor = true;
+            btnSequential.Click += btnSequential_Click;
+            // 
+            // btnRepeat
+            // 
+            btnRepeat.Location = new Point(24, 60);
+            btnRepeat.Name = "btnRepeat";
+            btnRepeat.Size = new Size(90, 33);
+            btnRepeat.TabIndex = 12;
+            btnRepeat.Text = "Repeat";
+            btnRepeat.UseVisualStyleBackColor = true;
+            btnRepeat.Click += btnRepeat_Click;
+            // 
+            // btnShuffle
+            // 
+            btnShuffle.Location = new Point(24, 13);
+            btnShuffle.Name = "btnShuffle";
+            btnShuffle.Size = new Size(90, 35);
+            btnShuffle.TabIndex = 11;
+            btnShuffle.Text = "Shuffle";
+            btnShuffle.UseVisualStyleBackColor = true;
+            btnShuffle.Click += btnShuffle_Click;
             // 
             // Form1
             // 
@@ -745,17 +788,12 @@
             Margin = new Padding(2);
             Name = "Form1";
             Text = "Form1";
-            panelPlayback.ResumeLayout(false);
-            panelPlayback.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBarVolume).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trackBarSeek).EndInit();
             panelNav.ResumeLayout(false);
             panelNav.PerformLayout();
             panelQueue.ResumeLayout(false);
             panelQueue.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewQueue).EndInit();
             contextMenuStripLibrary.ResumeLayout(false);
-            panelCentral.ResumeLayout(false);
             TabControl.ResumeLayout(false);
             tabPageLibrary.ResumeLayout(false);
             tabPageLibrary.PerformLayout();
@@ -770,62 +808,24 @@
             ((System.ComponentModel.ISupportInitialize)dataGridViewPlaylist).EndInit();
             tabSettingsStorage.ResumeLayout(false);
             tabSettingsStorage.PerformLayout();
+            panelCentral.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)trackBarSeek).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBarVolume).EndInit();
+            panelPlayback.ResumeLayout(false);
+            panelPlayback.PerformLayout();
             ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panelPlayback;
-        private System.Windows.Forms.TrackBar trackBarVolume;
-        private System.Windows.Forms.Button btnMute;
-        private System.Windows.Forms.Button btnPause;
-        private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.Button btnPlay;
-        private System.Windows.Forms.Button btnPrev;
-        private System.Windows.Forms.Label lblTotalTime;
-        private System.Windows.Forms.Label lblCurrentTime;
-        private System.Windows.Forms.TrackBar trackBarSeek;
-        private System.Windows.Forms.Label lblMaxVol;
-        private System.Windows.Forms.Label lblMinVol;
         private System.Windows.Forms.Panel panelNav;
         private System.Windows.Forms.Panel panelQueue;
-        private System.Windows.Forms.Panel panelCentral;
-        private System.Windows.Forms.TabControl TabControl;
-        private System.Windows.Forms.TabPage tabPageLibrary;
-        private System.Windows.Forms.TabPage tabPlaylists;
-        private System.Windows.Forms.TabPage tabSettingsStorage;
-        private System.Windows.Forms.Button btnAddFolder;
-        private System.Windows.Forms.Button btnAddFile;
-        private System.Windows.Forms.DataGridView dataGridViewLibrary;
-        private System.Windows.Forms.TextBox textBoxSearchBar;
-        private System.Windows.Forms.Label lblSearchBar;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnTitle;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnArtist;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnDuration;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLibrary;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlay;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddToQueue;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayNext;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddToPlaylist;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveFromLibrary;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Label lblPlaylists;
-        private System.Windows.Forms.Button buttonDeletePlaylist;
-        private System.Windows.Forms.Button buttonRenamePlaylist;
-        private System.Windows.Forms.Button buttonNewPlaylist;
-        private System.Windows.Forms.ListBox listBoxPlaylists;
-        private System.Windows.Forms.Button buttonDeleteSongFromPlaylist;
-        private System.Windows.Forms.Button buttonMoveDown;
-        private System.Windows.Forms.Button buttonMoveUp;
-        private System.Windows.Forms.Label labelPlaylistSongs;
-        private System.Windows.Forms.DataGridView dataGridViewPlaylist;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.Label labelStocare;
-        private System.Windows.Forms.ProgressBar progressBarStorage;
-        private System.Windows.Forms.Label labelSettingsStorage;
         private System.Windows.Forms.Label labelQueue;
         private System.Windows.Forms.Button buttonClearQueue;
         private System.Windows.Forms.Button btnRemoveQueue;
@@ -837,6 +837,51 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.Timer timer1;
+        private TabControl TabControl;
+        private TabPage tabPageLibrary;
+        private DataGridView dataGridViewLibrary;
+        private DataGridViewTextBoxColumn ColumnTitle;
+        private DataGridViewTextBoxColumn ColumnArtist;
+        private DataGridViewTextBoxColumn ColumnDuration;
+        private TextBox textBoxSearchBar;
+        private Label lblSearchBar;
+        private Button btnAddFile;
+        private TabPage tabPlaylists;
+        private SplitContainer splitContainer1;
+        private Label lblPlaylists;
+        private Button buttonDeletePlaylist;
+        private Button buttonRenamePlaylist;
+        private Button buttonNewPlaylist;
+        private ListBox listBoxPlaylists;
+        private DataGridView dataGridViewPlaylist;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private Button buttonDeleteSongFromPlaylist;
+        private Button buttonMoveDown;
+        private Button buttonMoveUp;
+        private Label labelPlaylistSongs;
+        private TabPage tabSettingsStorage;
+        private Label labelStocare;
+        private ProgressBar progressBarStorage;
+        private Label labelSettingsStorage;
+        private Panel panelCentral;
+        private TrackBar trackBarSeek;
+        private Label lblCurrentTime;
+        private Label lblTotalTime;
+        private Button btnPlay;
+        private Button btnNext;
+        private Button btnPause;
+        private Button btnMute;
+        private TrackBar trackBarVolume;
+        private Label lblMinVol;
+        private Label lblMaxVol;
+        private Panel panelPlayback;
+        private Button btnAddPlaylistToQueue;
+        private Button btnSequential;
+        private Button btnRepeat;
+        private Button btnShuffle;
+        private TextBox textBoxStrategie;
     }
 }
 

@@ -63,6 +63,13 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             timer1.Start();
 
             trackBarSeek.Scroll += trackBarSeek_Scroll;
+            //fix pentru radio buttons:
+            TabControl.SelectedTab = tabPageLibrary;
+            radioButtonLibrary.Checked = true;
+
+            //textbox cu display de strategie
+            _manager.ActivateSequential();
+            textBoxStrategie.Text = "Sequential";
 
             _manager.SongFinishedEvent += SongFinishedHandler;
             _manager.PlaybackErrorOccurred += PlaybackErrorHandler;
@@ -107,16 +114,16 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private async void btnPlay_Click(object sender, EventArgs e)
         {
-             // Asta e codul pe care o sa l foloseasca callback-ul nu testul de mai jos , trebuie implementat hascurrentsong,resume, iar playnextsong exista deja
-             if (_manager.HasCurrentSong()) //TREBUIE IMPLEMENTAT
-             {
-                 _manager.Resume();
-             }
-             else
-             {
-                 _manager.PlayNextSong(); 
-             }
-             
+            // Asta e codul pe care o sa l foloseasca callback-ul nu testul de mai jos , trebuie implementat hascurrentsong,resume, iar playnextsong exista deja
+            if (_manager.HasCurrentSong()) //TREBUIE IMPLEMENTAT
+            {
+                _manager.Resume();
+            }
+            else
+            {
+                _manager.PlayNextSong();
+            }
+
             //partea de mai jos e tinuta momentan doar pentru verificarea celorlalte callback uri
             // OpenFileDialog choofdlog = new OpenFileDialog();
             // choofdlog.Filter = "AudioFile|*.wav;*.flac;*.mp3";
@@ -173,7 +180,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private void SongFinishedHandler(object? obj, bool success)
         {
-            // PLACEHOLDER
+             if (dataGridViewQueue.Rows.Count > 0 && !dataGridViewQueue.Rows[0].IsNewRow)
+                dataGridViewQueue.Rows.RemoveAt(0);
         }
 
         #endregion
@@ -190,10 +198,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             await _manager.SkipSong();
         }
 
-        // private void btnPrev_Click(object sender, EventArgs e)
-        // {
-        //     // _manager.PlayPreviousSong(); //TREBUIE IMPLEMENTAT (daca se vrea daca nu scoatem butonul de previous)
-        // }
+
 
         private async void btnAddFile_Click(object sender, EventArgs e)
         {
@@ -216,8 +221,10 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
                     await _manager.AddSongToLibrary(filePath);
                 }
 
-                dataGridViewLibrary.Rows.Add(songInfo.SongTitle, songInfo.Artist,
-                    TimeSpan.FromSeconds(songInfo.DurationSecs).ToString(@"mm\:ss"), songInfo.FileName);
+                // Adaugam randul si setam explicit ColumnFileName
+                int rowIndex = dataGridViewLibrary.Rows.Add(songInfo.SongTitle, songInfo.Artist,
+                    TimeSpan.FromSeconds(songInfo.DurationSecs).ToString(@"mm\:ss"));
+                dataGridViewLibrary.Rows[rowIndex].Cells["ColumnFileName"].Value = songInfo.FileName;
             }
             catch (LibraryManagementException ex)
             {
@@ -232,10 +239,6 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
-        // private void btnAddFolder_Click(object sender, EventArgs e)
-        // {// nu e necesar
-        //
-        // }
 
         private void lblSearchBar_Click(object sender, EventArgs e)
         {
@@ -266,29 +269,24 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private void toolStripMenuItemPlay_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
-
             DataGridViewRow selected = dataGridViewLibrary.SelectedRows[0];
             string fileName = selected.Cells["ColumnFileName"].Value?.ToString() ?? "";
-            string title = selected.Cells["ColumnTitle"].Value?.ToString() ?? "";
-            string artist = selected.Cells["ColumnArtist"].Value?.ToString() ?? "";
-            string duration = selected.Cells["ColumnDuration"].Value?.ToString() ?? "";
-
+            string title = selected.Cells[0].Value?.ToString() ?? "";
+            string artist = selected.Cells[1].Value?.ToString() ?? "";
+            string duration = selected.Cells[2].Value?.ToString() ?? "";
             _manager.AddSongToQueue(fileName);
             dataGridViewQueue.Rows.Add(title, artist, duration);
-
             _manager.PlayNextSong();
         }
 
         private void toolStripMenuItemAddToQueue_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
-
             DataGridViewRow selected = dataGridViewLibrary.SelectedRows[0];
             string fileName = selected.Cells["ColumnFileName"].Value?.ToString() ?? "";
-            string title = selected.Cells["ColumnTitle"].Value?.ToString() ?? "";
-            string artist = selected.Cells["ColumnArtist"].Value?.ToString() ?? "";
-            string duration = selected.Cells["ColumnDuration"].Value?.ToString() ?? "";
-
+            string title = selected.Cells[0].Value?.ToString() ?? "";
+            string artist = selected.Cells[1].Value?.ToString() ?? "";
+            string duration = selected.Cells[2].Value?.ToString() ?? "";
             _manager.AddSongToQueue(fileName);
             dataGridViewQueue.Rows.Add(title, artist, duration);
         }
@@ -296,13 +294,11 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private void toolStripMenuItemPlayNext_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
-
             DataGridViewRow selected = dataGridViewLibrary.SelectedRows[0];
             string fileName = selected.Cells["ColumnFileName"].Value?.ToString() ?? "";
-            string title = selected.Cells["ColumnTitle"].Value?.ToString() ?? "";
-            string artist = selected.Cells["ColumnArtist"].Value?.ToString() ?? "";
-            string duration = selected.Cells["ColumnDuration"].Value?.ToString() ?? "";
-
+            string title = selected.Cells[0].Value?.ToString() ?? "";
+            string artist = selected.Cells[1].Value?.ToString() ?? "";
+            string duration = selected.Cells[2].Value?.ToString() ?? "";
             _manager.AddSongToQueue(fileName);
             dataGridViewQueue.Rows.Add(title, artist, duration);
         }
@@ -315,7 +311,6 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private async void toolStripMenuItemAddToPlaylist_Click(object sender, EventArgs e)
         {
-           
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
             if (listBoxPlaylists.Items.Count == 0)
             {
@@ -323,33 +318,22 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
                     "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-
-            // Afisam un dialog cu lista de playlists disponibile
-            string[] playlists = listBoxPlaylists.Items
-                .Cast<string>()
-                .ToArray();
-
+            string[] playlists = listBoxPlaylists.Items.Cast<string>().ToArray();
             string selectedPlaylist = Microsoft.VisualBasic.Interaction.InputBox(
                 "Numele playlistului in care adaugi:\n" + string.Join(", ", playlists),
                 "Add to Playlist", playlists[0]);
-
             if (string.IsNullOrWhiteSpace(selectedPlaylist)) return;
             if (!listBoxPlaylists.Items.Contains(selectedPlaylist))
             {
-                MessageBox.Show("Playlist negasit.", "Eroare",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Playlist negasit.", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             DataGridViewRow selected = dataGridViewLibrary.SelectedRows[0];
             string fileName = selected.Cells["ColumnFileName"].Value?.ToString() ?? "";
-            string title = selected.Cells["ColumnTitle"].Value?.ToString() ?? "";
-            string artist = selected.Cells["ColumnArtist"].Value?.ToString() ?? "";
-            string duration = selected.Cells["ColumnDuration"].Value?.ToString() ?? "";
-
+            string title = selected.Cells[0].Value?.ToString() ?? "";
+            string artist = selected.Cells[1].Value?.ToString() ?? "";
+            string duration = selected.Cells[2].Value?.ToString() ?? "";
             await _manager.AddSongToPlaylist(selectedPlaylist, fileName);
-
-            // Daca playlistul selectat e deschis in tabel, adaugam si vizual
             if (listBoxPlaylists.SelectedItem?.ToString() == selectedPlaylist)
             {
                 dataGridViewPlaylist.Rows.Add(title, artist, duration, fileName);
@@ -359,21 +343,18 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private void toolStripMenuItemRemoveFromPlaylist_Click(object sender, EventArgs e)//defapt e from library a fost un name gresit
         {
-           
-            if (dataGridViewLibrary.SelectedRows.Count == 0) return;
 
+            if (dataGridViewLibrary.SelectedRows.Count == 0) return;
             DataGridViewRow selected = dataGridViewLibrary.SelectedRows[0];
             string fileName = selected.Cells["ColumnFileName"].Value?.ToString() ?? "";
-
             try
             {
                 _manager.RemoveSongFromLibrary(fileName);
                 dataGridViewLibrary.Rows.Remove(selected);
             }
-            catch (LibraryManagementException ex)
+            catch (MediaManagementException ex)
             {
-                MessageBox.Show(ex.Message, "Eroare la stergere",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Eroare la stergere", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -480,48 +461,99 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private void listBoxPlaylists_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             if (listBoxPlaylists.SelectedItem == null) return;
 
             string playlistName = listBoxPlaylists.SelectedItem.ToString() ?? "";
 
             dataGridViewPlaylist.Rows.Clear();
 
-            
-            var playlist = _manager.GetPlaylistSongs(playlistName); // TREBUIE IMPLEMENTAT
-            foreach (var song in playlist)
+            try
             {
-                dataGridViewPlaylist.Rows.Add(song.SongTitle, song.Artist,
-                    TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"), song.FileName);
+                var playlist = _manager.GetPlaylistSongs(playlistName);
+                foreach (var song in playlist)
+                {
+                    int rowIndex = dataGridViewPlaylist.Rows.Add(song.SongTitle, song.Artist,
+                        TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"));
+                    dataGridViewPlaylist.Rows[rowIndex].Cells["ColumnFileName"].Value = song.FileName;
+                }
             }
-            
+            catch (MediaManagementException ex)
+            {
+                MessageBox.Show(ex.Message, "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
 
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-           
-            TimeSpan current = _manager.GetCurrentSongPosition();
-            TimeSpan total = _manager.GetCurrentSongDuration();
-
-            lblCurrentTime.Text = current.ToString(@"mm\:ss");
-            lblTotalTime.Text = total.ToString(@"mm\:ss");
-            
-            if (total.TotalSeconds > 0)
+            try
             {
-                trackBarSeek.Maximum = (int)total.TotalSeconds;
-                trackBarSeek.Value = Math.Min((int)current.TotalSeconds, trackBarSeek.Maximum);
+                TimeSpan current = _manager.GetCurrentSongPosition();
+                TimeSpan total = _manager.GetCurrentSongDuration();
+                lblCurrentTime.Text = current.ToString(@"mm\:ss");
+                lblTotalTime.Text = total.ToString(@"mm\:ss");
+                if (total.TotalSeconds > 0)
+                {
+                    trackBarSeek.Maximum = (int)total.TotalSeconds;
+                    trackBarSeek.Value = Math.Min((int)current.TotalSeconds, trackBarSeek.Maximum);
+                }
             }
-            
+            catch { }
 
         }
 
         private void trackBarSeek_Scroll(object sender, EventArgs e)
-        {  
+        {
             TimeSpan current = _manager.GetCurrentSongPosition();
             double diff = trackBarSeek.Value - current.TotalSeconds;
             _manager.ChangeSongPosition(diff);
         }
 
+        private void btnAddPlaylistToQueue_Click(object sender, EventArgs e)
+        {
+            if (listBoxPlaylists.SelectedItem == null) return;
 
+            string playlistName = listBoxPlaylists.SelectedItem.ToString() ?? "";
+
+            try
+            {
+                _manager.AddPlaylistToQueue(playlistName);
+
+                var songs = _manager.GetPlaylistSongs(playlistName); // TREBUIE IMPLEMENTAT
+                foreach (var song in songs)
+                {
+                    dataGridViewQueue.Rows.Add(song.SongTitle, song.Artist,
+                        TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"), song.FileName);
+                }
+            }
+            catch (MediaManagementException ex)
+            {
+                MessageBox.Show(ex.Message, "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void btnShuffle_Click(object sender, EventArgs e)
+        {
+            _manager.ActivateShuffle();
+            textBoxStrategie.Text = "Shuffle";
+
+        }
+
+        private void btnRepeat_Click(object sender, EventArgs e)
+        {
+            _manager.ActivateRepeat();
+            textBoxStrategie.Text = "Repeat";
+
+        }
+
+        private void btnSequential_Click(object sender, EventArgs e)
+        {
+            _manager.ActivateSequential();
+            textBoxStrategie.Text = "Sequential";
+
+        }
     }
 }
