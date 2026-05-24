@@ -60,7 +60,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             trackBarVolume.Minimum = 0;
             trackBarVolume.Maximum = 100;
             trackBarVolume.Value = 100;
-            _manager.AdjustVolume(100);
+            _manager.AdjustVolume(50);
 
             // Legam slider-ul
             trackBarVolume.Scroll += trackBarVolume_Scroll;
