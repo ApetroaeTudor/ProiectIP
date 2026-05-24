@@ -27,6 +27,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private MediaPlayer _player = new MediaPlayer();
         private MediaManager _manager = new MediaManager();
 
+        // <summary>
+        /// Initializes form components, hidden columns, event handlers, and default UI state.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -82,6 +85,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             _manager.PlaybackDoneOcurred += PlaybackDoneHandler;
         }
 
+        /// <summary>
+        /// Handles form load event. Reserved for future initialization logic.
+        /// </summary>
         private void Form1_Load_1(object sender, EventArgs e)
         {
             // Aici poți inițializa tabelele la pornirea aplicației dacă e nevoie
@@ -90,6 +96,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         #region CALLBACK-URI NAVIGARE (Schimbarea paginilor din meniul stânga)
 
+        /// <summary>
+        /// Navigates to the Library tab when the Library radio button is selected.
+        /// </summary>
         private void radioButtonLibrary_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonLibrary.Checked)
@@ -98,6 +107,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
+        /// <summary>
+        /// Navigates to the Playlists tab when the Playlists radio button is selected.
+        /// </summary>
         private void radioButtonPlaylists_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonPlaylists.Checked)
@@ -106,18 +118,15 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
-        private void radioButtonStorage_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButtonStorage.Checked)
-            {
-                TabControl.SelectedTab = tabSettingsStorage;
-            }
-        }
+       
 
         #endregion
 
         #region CALLBACK-URI CONTROALE AUDIO
-        
+
+        /// <summary>
+        /// Highlights the currently playing song row in the queue grid when a new song starts.
+        /// </summary>
         private void Manager_SongStartedEvent(object? sender, SongInfo song)
         {
             if (dataGridViewQueue.InvokeRequired)
@@ -147,7 +156,10 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             {
             }
         }
-        
+
+        /// <summary>
+        /// Resumes playback if a song is loaded, otherwise plays the next song in the queue.
+        /// </summary>
         private async void btnPlay_Click(object sender, EventArgs e)
         {
             if (_manager.HasCurrentSong())
@@ -160,6 +172,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
+        /// <summary>
+        /// Mutes the audio and resets the volume slider to zero.
+        /// </summary>
         private void btnMute_Click(object sender, EventArgs e)
         {
             _manager.AdjustVolume(0);
@@ -170,16 +185,25 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         #region HANDLERE EVENIMENTE BACKEND (Mesaje de eroare / info)
 
+        /// <summary>
+        /// Displays a playback error message received from the backend.
+        /// </summary>
         private void PlaybackErrorHandler(object? obj, PlaybackFailedException playbackException)
         {
             MessageBox.Show(playbackException.Message, "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        /// <summary>
+        /// Displays an informational message when all songs in the queue have finished playing.
+        /// </summary>
         private void PlaybackDoneHandler(object? obj, PlaybackDoneException playbackException)
         {
             MessageBox.Show(playbackException.Message, "Playback Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        /// <summary>
+        /// Removes the finished song from the queue grid. Skipped if Repeat strategy is active.
+        /// </summary>
         private void SongFinishedHandler(object? obj, bool success)
         {
             if (dataGridViewQueue.InvokeRequired)
@@ -206,18 +230,25 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         #endregion
 
-
-
+        /// <summary>
+        /// Pauses the current playback.
+        /// </summary>
         private void btnPause_Click(object sender, EventArgs e)
         {
             _manager.Pause();
         }
 
+        /// <summary>
+        /// Skips the current song and plays the next one in the queue.
+        /// </summary>
         private async void btnNext_Click(object sender, EventArgs e)
         {
             await _manager.SkipSong();
         }
 
+        /// <summary>
+        /// Opens a file dialog, loads the selected audio file into the library and displays it in the grid.
+        /// </summary>
         private async void btnAddFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -254,7 +285,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
-
+        /// <summary>
+        /// Filters the library grid based on the text entered in the search bar.
+        /// </summary>
         private void lblSearchBar_Click(object sender, EventArgs e)
         {
             string query = textBoxSearchBar.Text.Trim().ToLower();
@@ -270,6 +303,10 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
 
         }
+
+        /// <summary>
+        /// Removes the selected song from the library grid.
+        /// </summary>
         private void btnRemove_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridViewLibrary.SelectedRows)
@@ -281,6 +318,10 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         //callback uri pentru stripmenuitem uri
+
+        /// <summary>
+        /// Adds the selected song to the queue and begins immediate playback.
+        /// </summary>
         private void toolStripMenuItemPlay_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
@@ -298,6 +339,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             _manager.PlayNextSong();
         }
 
+        /// <summary>
+        /// Adds the selected song to the end of the playback queue.
+        /// </summary>
         private void toolStripMenuItemAddToQueue_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
@@ -313,6 +357,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
         }
 
+        /// <summary>
+        /// Adds the selected song to the playback queue to be played next.
+        /// </summary>
         private void toolStripMenuItemPlayNext_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
@@ -326,12 +373,18 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
         }
 
+        /// <summary>
+        /// Adjusts the playback volume based on the volume slider position.
+        /// </summary>
         private void trackBarVolume_Scroll(object sender, EventArgs e)
         {
             // Impartim la 100 ca sa normalizam pentru MediaPlayer (0.0 - 1.0)
             _manager.AdjustVolume((double)trackBarVolume.Value / 100.0);
         }
 
+        /// <summary>
+        /// Adds the selected song to a user-specified playlist chosen via an input dialog.
+        /// </summary>
         private async void toolStripMenuItemAddToPlaylist_Click(object sender, EventArgs e)
         {
             if (dataGridViewLibrary.SelectedRows.Count == 0) return;
@@ -363,7 +416,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
-
+        /// <summary>
+        /// Removes the selected song from the library, both in the UI and the database.
+        /// </summary>
         private void toolStripMenuItemRemoveFromPlaylist_Click(object sender, EventArgs e)//defapt e from library a fost un name gresit
         {
 
@@ -381,12 +436,18 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
+        /// <summary>
+        /// Clears all songs from the playback queue in both the backend and the UI.
+        /// </summary>
         private void buttonClearQueue_Click(object sender, EventArgs e)
         {
             _manager.ClearQueue();
             dataGridViewQueue.Rows.Clear();
         }
 
+        /// <summary>
+        /// Removes the selected song from the playback queue grid.
+        /// </summary>
         private void btnRemoveQueue_Click(object sender, EventArgs e)
         {
             if (dataGridViewQueue.SelectedRows.Count == 0) return;
@@ -396,6 +457,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewQueue.Rows.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Creates a new playlist with the name provided by the user via an input dialog.
+        /// </summary>
         private async void buttonNewPlaylist_Click(object sender, EventArgs e)
         {
             string name = Microsoft.VisualBasic.Interaction.InputBox(
@@ -407,6 +471,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             listBoxPlaylists.Items.Add(name);
         }
 
+        /// <summary>
+        /// Renames the selected playlist using a new name provided by the user via an input dialog.
+        /// </summary>
         private async void buttonRenamePlaylist_Click(object sender, EventArgs e)
         {
             if (listBoxPlaylists.SelectedItem == null) return;
@@ -421,6 +488,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             listBoxPlaylists.Items[listBoxPlaylists.SelectedIndex] = newName;
         }
 
+        /// <summary>
+        /// Deletes the selected playlist from the database and removes it from the UI.
+        /// </summary>
         private async void buttonDeletePlaylist_Click(object sender, EventArgs e)
         {
             if (listBoxPlaylists.SelectedItem == null) return;
@@ -432,6 +502,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewPlaylist.Rows.Clear();
         }
 
+        //// <summary>
+        /// Moves the selected song one position up in the playlist grid.
+        /// </summary>
         private void buttonMoveUp_Click(object sender, EventArgs e)
         {
             if (dataGridViewPlaylist.SelectedRows.Count == 0) return;
@@ -451,6 +524,10 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewPlaylist.Rows[index].Selected = false;
         }
 
+
+        /// <summary>
+        /// Moves the selected song one position down in the playlist grid.
+        /// </summary>
         private void buttonMoveDown_Click(object sender, EventArgs e)
         {
             if (dataGridViewPlaylist.SelectedRows.Count == 0) return;
@@ -469,6 +546,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewPlaylist.Rows[index].Selected = false;
         }
 
+        /// <summary>
+        /// Removes the selected song from the current playlist in both the database and the UI.
+        /// </summary>
         private async void buttonDeleteSongFromPlaylist_Click(object sender, EventArgs e)
         {
             if (dataGridViewPlaylist.SelectedRows.Count == 0) return;
@@ -482,6 +562,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewPlaylist.Rows.Remove(selected);
         }
 
+        /// <summary>
+        /// Loads and displays the songs of the selected playlist in the playlist grid.
+        /// </summary>
         private void listBoxPlaylists_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -509,6 +592,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         }
 
+        /// <summary>
+        /// Updates the seek bar and time labels every second based on the current playback position.
+        /// </summary>
         private void timer1_Tick(object sender, EventArgs e)
         {
             try
@@ -527,6 +613,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         }
 
+        /// <summary>
+        /// Seeks to the position indicated by the seek bar when the user drags it.
+        /// </summary>
         private void trackBarSeek_Scroll(object sender, EventArgs e)
         {
             TimeSpan current = _manager.GetCurrentSongPosition();
@@ -534,6 +623,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             _manager.ChangeSongPosition(diff);
         }
 
+        /// <summary>
+        /// Adds all songs from the selected playlist to the playback queue.
+        /// </summary>
         private void btnAddPlaylistToQueue_Click(object sender, EventArgs e)
         {
             if (listBoxPlaylists.SelectedItem == null) return;
@@ -556,6 +648,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
+        /// <summary>
+        /// Activates shuffle playback strategy and updates the strategy display.
+        /// </summary>
         private void btnShuffle_Click(object sender, EventArgs e)
         {
             _manager.ActivateShuffle();
@@ -563,6 +658,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         }
 
+        /// <summary>
+        /// Activates repeat playback strategy and updates the strategy display.
+        /// </summary>
         private void btnRepeat_Click(object sender, EventArgs e)
         {
             _manager.ActivateRepeat();
@@ -570,6 +668,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         }
 
+        /// <summary>
+        /// Activates sequential playback strategy and updates the strategy display.
+        /// </summary>
         private void btnSequential_Click(object sender, EventArgs e)
         {
             _manager.ActivateSequential();
