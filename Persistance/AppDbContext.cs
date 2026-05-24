@@ -20,7 +20,10 @@ namespace Persistance
 
         internal DbSet<SongInfo> Songs => Set<SongInfo>();
         internal DbSet<PlaylistInfo> Playlists => Set<PlaylistInfo>();
-
+        /// <summary>
+        /// Configurează schema bazei de date în Entity Framework Core
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SongInfo>(entity =>
@@ -42,7 +45,11 @@ namespace Persistance
                       .UsingEntity("PlaylistSongs");
             });
         }
-
+        /// <summary>
+        /// Metoda fabrica
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="DatabaseConnectionException"></exception>
         public static AppDbContext Create()
         {
             try

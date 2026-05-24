@@ -22,16 +22,33 @@ public class PlaylistRepository
         _context = context;
         _playlists = _context.Playlists.Include(p => p.Songs).AsNoTracking().ToList();
     }
-
+    /// <summary>
+    /// Returnează playlistul cu id-ul dat ca parametru fără să acceseze baza de date
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public PlaylistInfo? GetPlaylistById(string id) =>
         _playlists.FirstOrDefault(p => p.Id == id);
-
+    /// <summary>
+    /// Returnează playlistul cu numele dat ca parametru fără să acceseze baza de date
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public PlaylistInfo? GetPlaylistByName(string name) =>
         _playlists.FirstOrDefault(p => p.PlaylistName.Equals(name, StringComparison.OrdinalIgnoreCase));
-
+    /// <summary>
+    /// Returnează cântecele din playlist fără să acceseze baza de date
+    /// </summary>
+    /// <param name="playlistId"></param>
+    /// <returns></returns>
     public List<SongInfo> GetSongsInPlaylist(string playlistId) =>
         _playlists.FirstOrDefault(p => p.Id == playlistId)?.Songs.ToList() ?? new();
-
+    /// <summary>
+    /// Adaugă asincron un playlist în baza de date
+    /// </summary>
+    /// <param name="playlist"></param>
+    /// <returns></returns>
+    /// <exception cref="DatabaseOperationException"></exception>
     public async Task AddPlaylist(PlaylistInfo playlist)
     {
         try
@@ -62,7 +79,13 @@ public class PlaylistRepository
             throw new DatabaseOperationException("ERROR - nu a reusit salvarea playlist-ului! ");
         }
     }
-
+    /// <summary>
+    /// Adaugă asincron un cântec într-un playlist
+    /// </summary>
+    /// <param name="playlistId"></param>
+    /// <param name="songId"></param>
+    /// <param name="songRepo"></param>
+    /// <returns></returns>
     public async Task AddSongToPlaylist(string playlistId, string songId, SongRepository songRepo)
     {
         var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
@@ -102,7 +125,12 @@ public class PlaylistRepository
             }
         }
     }
-    
+    /// <summary>
+    /// Scoate asincron un cântec dintr-un playlist
+    /// </summary>
+    /// <param name="playlistId"></param>
+    /// <param name="songId"></param>
+    /// <returns></returns>
     public async Task RemoveSongFromPlaylist(string playlistId, string songId)
     {
         var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
@@ -118,7 +146,11 @@ public class PlaylistRepository
             _context.Entry(song).State = EntityState.Detached;     
         }
     }
-
+    /// <summary>
+    /// Șterge asincron un playlist din baza de date
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public async Task RemovePlaylist(string id)
     {
         var playlist = _playlists.FirstOrDefault(p => p.Id == id);
@@ -130,7 +162,10 @@ public class PlaylistRepository
             _playlists.Remove(playlist);
         }
     }
-    
+    /// <summary>
+    /// Șterge un cântec din memorie
+    /// </summary>
+    /// <param name="songId"></param>
     public void RemoveSongFromMemory(string songId)
     {
         foreach (var playlist in _playlists)

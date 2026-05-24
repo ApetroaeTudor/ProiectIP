@@ -22,16 +22,32 @@ public class SongRepository
         _context = context;
         _songs = _context.Songs.AsNoTracking().ToList();
     }
-
+    /// <summary>
+    /// Returnează un cântec după id fără a accesa baza de date
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     internal SongInfo? GetById(string id) =>
         _songs.FirstOrDefault(s => s.Id == id);
-
+    /// <summary>
+    /// Returnează un cântec după titlu fără a accesa baza de date
+    /// </summary>
+    /// <param name="title"></param>
+    /// <returns></returns>
     public SongInfo? GetSongByTitle(string title) =>
         _songs.FirstOrDefault(s => s.SongTitle.Equals(title, StringComparison.OrdinalIgnoreCase));
-
+    /// <summary>
+    /// Returnează un cântec după numele fiserului fără a accesa baza de date
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <returns></returns>
     public SongInfo? GetSongByFileName(string filename) =>
         _songs.FirstOrDefault(s => s.FileName.Equals(filename, StringComparison.OrdinalIgnoreCase));
-
+    /// <summary>
+    /// Adaugă asincron un cântec în baza de date
+    /// </summary>
+    /// <param name="song"></param>
+    /// <returns></returns>
     public async Task AddSong(SongInfo song)
     {
         bool exists = await _context.Songs.AnyAsync(s => s.Id == song.Id);
@@ -45,6 +61,11 @@ public class SongRepository
                 _songs.Add(song);
         }
     }
+    /// <summary>
+    /// Scoate asincron un cântec din baza de date
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public async Task RemoveSong(string id)
     {
         var song = _songs.FirstOrDefault(s => s.Id == id);
