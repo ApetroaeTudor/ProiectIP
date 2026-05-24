@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-// Bibliotecile colegilor tăi (Backend-ul audio/file management)
+
 using FileManagement;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -27,7 +27,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private MediaPlayer _player = new MediaPlayer();
         private MediaManager _manager = new MediaManager();
 
-        // <summary>
+        /// <summary>
         /// Initializes form components, hidden columns, event handlers, and default UI state.
         /// </summary>
         public Form1()
@@ -129,6 +129,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         /// </summary>
         private void Manager_SongStartedEvent(object? sender, SongInfo song)
         {
+            //varianta fara label 
+            /*
             if (dataGridViewQueue.InvokeRequired)
             {
                 dataGridViewQueue.Invoke(() => Manager_SongStartedEvent(sender, song));
@@ -153,6 +155,35 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
                 }
             }
             catch 
+            {
+            }
+            */
+            if (dataGridViewQueue.InvokeRequired)
+            {
+                dataGridViewQueue.Invoke(() => Manager_SongStartedEvent(sender, song));
+                return;
+            }
+
+            lblPlayingNow.Text = $"Now Playing: {song.SongTitle} - {song.Artist}";
+
+            try
+            {
+                if (!dataGridViewQueue.Columns.Contains("ColumnFileName")) return;
+
+                dataGridViewQueue.ClearSelection();
+
+                foreach (DataGridViewRow row in dataGridViewQueue.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    if (row.Cells["ColumnFileName"].Value?.ToString() == song.FileName)
+                    {
+                        row.Selected = true;
+                        break;
+                    }
+                }
+            }
+            catch
             {
             }
         }
@@ -271,6 +302,12 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
                 int rowIndex = dataGridViewLibrary.Rows.Add(songInfo.SongTitle, songInfo.Artist,
                     TimeSpan.FromSeconds(songInfo.DurationSecs).ToString(@"mm\:ss"));
                 dataGridViewLibrary.Rows[rowIndex].Cells["ColumnFileName"].Value = songInfo.FileName;
+
+                // Adaugam automat in queue
+                _manager.AddSongToQueue(songInfo.FileName);
+                int queueRowIndex = dataGridViewQueue.Rows.Add(songInfo.SongTitle, songInfo.Artist,
+                    TimeSpan.FromSeconds(songInfo.DurationSecs).ToString(@"mm\:ss"));
+                dataGridViewQueue.Rows[queueRowIndex].Cells["ColumnFileName"].Value = songInfo.FileName;
             }
             catch (LibraryManagementException ex)
             {
@@ -502,7 +539,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             dataGridViewPlaylist.Rows.Clear();
         }
 
-        //// <summary>
+        /// <summary>
         /// Moves the selected song one position up in the playlist grid.
         /// </summary>
         private void buttonMoveUp_Click(object sender, EventArgs e)

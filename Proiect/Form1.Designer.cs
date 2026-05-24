@@ -84,6 +84,7 @@
             lblMinVol = new Label();
             lblMaxVol = new Label();
             panelPlayback = new Panel();
+            lblPlayingNow = new Label();
             label1 = new Label();
             textBoxStrategie = new TextBox();
             btnSequential = new Button();
@@ -675,6 +676,7 @@
             // panelPlayback
             // 
             panelPlayback.BackColor = Color.LightSlateGray;
+            panelPlayback.Controls.Add(lblPlayingNow);
             panelPlayback.Controls.Add(label1);
             panelPlayback.Controls.Add(textBoxStrategie);
             panelPlayback.Controls.Add(btnSequential);
@@ -696,6 +698,15 @@
             panelPlayback.Name = "panelPlayback";
             panelPlayback.Size = new Size(1460, 140);
             panelPlayback.TabIndex = 0;
+            // 
+            // lblPlayingNow
+            // 
+            lblPlayingNow.AutoSize = true;
+            lblPlayingNow.Location = new Point(143, 107);
+            lblPlayingNow.Name = "lblPlayingNow";
+            lblPlayingNow.Size = new Size(77, 15);
+            lblPlayingNow.TabIndex = 15;
+            lblPlayingNow.Text = "Now Playing:";
             // 
             // label1
             // 
@@ -843,6 +854,7 @@
         private Button btnShuffle;
         private TextBox textBoxStrategie;
         private Label label1;
+        private Label lblPlayingNow;
     }
 }
 
