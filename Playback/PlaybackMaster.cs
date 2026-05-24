@@ -7,6 +7,7 @@
  *               unui MediaPlayer                                                   *
  ************************************************************************************/
 
+using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 
@@ -18,6 +19,7 @@ namespace Playback;
 public class PlaybackMaster
 {
     private MediaPlayer _mediaPlayer;
+    private TypedEventHandler<MediaPlayer, object> _mediaEndedHandler;
     public bool SongsLoaded { get; set; } = false;
     
     /// <summary>
@@ -31,10 +33,12 @@ public class PlaybackMaster
     public PlaybackMaster()
     {
         _mediaPlayer = new MediaPlayer();
-        _mediaPlayer.MediaEnded += (sender, args) =>
+        _mediaPlayer.AutoPlay = false;
+        _mediaEndedHandler = (sender, args) =>
         {
             OnSongEnded?.Invoke();
         };
+        _mediaPlayer.MediaEnded += _mediaEndedHandler;
     }
 
     /// <summary>
@@ -92,9 +96,12 @@ public class PlaybackMaster
     /// Seteaza sursa media pentru player.
     /// </summary>
     /// <param name="source">Sursa media de redat.</param>
+
     public void SetSource(MediaSource source)
     {
+        _mediaPlayer.MediaEnded -= _mediaEndedHandler;
         _mediaPlayer.Source = source;
+        _mediaPlayer.MediaEnded += _mediaEndedHandler;
     }
 
     /// <summary>

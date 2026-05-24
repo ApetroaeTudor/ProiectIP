@@ -1,12 +1,4 @@
-﻿/*************************************************************************************************************
- *                                                                                                           *
- *  File:        Song.cs                                                                                     *
- *  Copyright:   (c) 2026, Apetroae Tudor                                                                    *
- *  E-mail:      tudor.apetroae@student.tuiasi.ro                                                            *
- *  Description: Clasa frunza in ierarhia playable. Contine informatiile necesare pentru a incarca un cantec *
- ************************************************************************************************************/
-
-using Common;
+﻿using Common;
 using Playback.Strategies;
 
 namespace Playback.Playables;
@@ -17,6 +9,8 @@ namespace Playback.Playables;
 public class Song : IPlayable
 {
     private SongInfo _songInfo;
+    private bool _isPlayed = false;
+    private bool _isRepeatEnabled = false;
 
     /// <summary>
     /// Returneaza informatiile despre cantec.
@@ -44,18 +38,36 @@ public class Song : IPlayable
     }
 
     /// <summary>
-    /// Returneaza instanta curenta, cantecul fiind propriul sau element playable.
+    /// Returneaza instanta curenta. Daca repetarea este activa, se returneaza mereu.
+    /// Altfel, se returneaza o singura data, apoi null.
     /// </summary>
-    public IPlayable GetNextPlayable()
+    public IPlayable? GetNextPlayable()
     {
-        return this;
+        if (_isRepeatEnabled)
+        {
+            return this;
+        }
+
+        if (!_isPlayed)
+        {
+            _isPlayed = true;
+            return this;
+        }
+        
+        return null;
     }
 
     /// <summary>
-    /// Neimplementat. Un cantec individual nu foloseste strategii de redare.
+    /// Detecteaza daca strategia setata este de tip Repeat.
     /// </summary>
+    /// <param name="playbackStrategy">Strategia de aplicat.</param>
     public void SetPlaybackStrategy(IPlaybackStrategy playbackStrategy)
     {
-        // metoda neimplementata
+        _isRepeatEnabled = (playbackStrategy is RepeatStrategy);
+
+        if (_isRepeatEnabled)
+        {
+            _isPlayed = false;
+        }
     }
 }

@@ -36,17 +36,22 @@ public class PlaylistRepository
     {
         try
         {
-            foreach (var song in playlist.Songs)
+            bool alreadyExists = await _context.Playlists.AnyAsync(p => p.Id == playlist.Id);
+        
+            if (!alreadyExists)
             {
-                var trackedSong = _context.Songs.Local.FirstOrDefault(s => s.Id == song.Id);
-                if (trackedSong == null)
+                foreach (var song in playlist.Songs)
                 {
-                    _context.Songs.Attach(song);
+                    var trackedSong = _context.Songs.Local.FirstOrDefault(s => s.Id == song.Id);
+                    if (trackedSong == null)
+                    {
+                        _context.Songs.Attach(song);
+                    }
                 }
+                _context.Playlists.Add(playlist);
+                await _context.SaveChangesAsync();
             }
 
-            _context.Playlists.Add(playlist);
-            await _context.SaveChangesAsync();
             if (!_playlists.Any(p => p.Id == playlist.Id))
             {
                 _playlists.Add(playlist);

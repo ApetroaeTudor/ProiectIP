@@ -16,6 +16,8 @@ namespace Playback.Playables;
 public class PlaybackQueue : IPlayable
 {
     private List<IPlayable> _playables;
+    private IPlaybackStrategy _playbackStrategy;
+    private IPlayable? _activePlayable;
 
     /// <summary>
     /// Initializeaza o coada de redare goala.
@@ -23,6 +25,7 @@ public class PlaybackQueue : IPlayable
     public PlaybackQueue()
     {
         _playables = new List<IPlayable>();    
+        _playbackStrategy = new SequentialStrategy();
     }
 
     /// <summary>
@@ -35,34 +38,43 @@ public class PlaybackQueue : IPlayable
     }
 
     /// <summary>
-    /// Returneaza urmatorul element playabke din coada. Elimina elementele epuizate.
-    /// Returneaza null daca coada este goala.
+    /// Returneaza urmatorul element playable din coada conform strategiei active.
+    /// Elimina elementele epuizate. Returneaza null daca coada este goala.
     /// </summary>
     public IPlayable? GetNextPlayable()
     {
-        while (_playables.Count > 0)
+        while (true)
         {
-            var current = _playables[0];
-            var next = current.GetNextPlayable();
+            if (_playables.Count == 0) return null;
+
+            if (_activePlayable == null)
+            {
+                _activePlayable = _playbackStrategy.GetNextPlayable(_playables);
+                
+                if (_activePlayable == null)
+                    return null;
+            }
+
+            var next = _activePlayable.GetNextPlayable();
 
             if (next is not null)
             {
                 return next;
             }
 
-            // Elementul curent s-a epuizat, il eliminam din coada
-            _playables.RemoveAt(0);
+            _playables.Remove(_activePlayable);
+            _activePlayable = null;
         }
-
-        return null;
     }
 
     /// <summary>
-    /// Propaga strategia de redare catre toate elementele din coada.
+    /// Seteaza strategia de redare pentru coada si o propaga catre toate elementele.
     /// </summary>
     /// <param name="playbackStrategy">Strategia de aplicat.</param>
     public void SetPlaybackStrategy(IPlaybackStrategy playbackStrategy)
     {
+        _playbackStrategy = playbackStrategy;
+        
         foreach (IPlayable playable in _playables)
         {
             playable.SetPlaybackStrategy(playbackStrategy);
@@ -75,6 +87,6 @@ public class PlaybackQueue : IPlayable
     public void Clear()
     {
         _playables.Clear();
+        _activePlayable = null;
     }
-    
 }

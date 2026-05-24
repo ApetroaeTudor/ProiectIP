@@ -1,13 +1,6 @@
-﻿/********************************************************************************************************
- *                                                                                                      *
- *  File:        PlaybackPlaylist.cs                                                                    *
- *  Copyright:   (c) 2026, Apetroae Tudor                                                               *
- *  E-mail:      tudor.apetroae@student.tuiasi.ro                                                       *
- *  Description: Clasa folosita pentru a grupa cantece in playlist-uri in cadrul procesului de playback *
- ********************************************************************************************************/
-
-using Common;
+﻿using Common;
 using Playback.Strategies;
+using System.Collections.Generic;
 
 namespace Playback.Playables;
 
@@ -19,11 +12,9 @@ public class PlaybackPlaylist : IPlayable
     private List<IPlayable> _playables;
     private IPlaybackStrategy _playbackStrategy;
     private PlaylistInfo _playlistInfo;
+    
+    private IPlayable? _activePlayable; 
 
-    /// <summary>
-    /// Initializeaza un playlist cu informatiile date, folosind strategia secventiala implicit.
-    /// </summary>
-    /// <param name="playlistInfo">Informatiile despre playlist.</param>
     public PlaybackPlaylist(PlaylistInfo playlistInfo)
     {
         _playbackStrategy = new SequentialStrategy();
@@ -31,10 +22,6 @@ public class PlaybackPlaylist : IPlayable
         _playlistInfo = playlistInfo;
     }
 
-    /// <summary>
-    /// Adauga un element playable in playlist.
-    /// </summary>
-    /// <param name="playable">Elementul de adaugat.</param>
     public void AddPlayable(IPlayable playable)
     {
         _playables.Add(playable);
@@ -43,17 +30,34 @@ public class PlaybackPlaylist : IPlayable
     /// <summary>
     /// Returneaza urmatorul element playable conform strategiei active.
     /// </summary>
-    public IPlayable GetNextPlayable()
+    public IPlayable? GetNextPlayable()
     {
-        return _playbackStrategy.GetNextPlayable(_playables);
+        while (true)
+        {
+            if (_playables.Count == 0) return null;
+
+            if (_activePlayable == null)
+            {
+                _activePlayable = _playbackStrategy.GetNextPlayable(_playables);
+                if (_activePlayable == null) return null;
+            }
+
+            var next = _activePlayable.GetNextPlayable();
+
+            if (next is not null) return next;
+
+            _playables.Remove(_activePlayable);
+            _activePlayable = null;
+        }
     }
 
-    /// <summary>
-    /// Seteaza strategia de redare pentru playlist.
-    /// </summary>
-    /// <param name="playbackStrategy">Strategia de aplicat.</param>
     public void SetPlaybackStrategy(IPlaybackStrategy playbackStrategy)
     {
         _playbackStrategy = playbackStrategy;
+        
+        foreach (IPlayable playable in _playables)
+        {
+            playable.SetPlaybackStrategy(playbackStrategy);
+        }
     }
 }

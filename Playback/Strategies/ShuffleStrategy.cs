@@ -16,20 +16,18 @@ namespace Playback.Strategies;
 /// </summary>
 public class ShuffleStrategy : IPlaybackStrategy
 {
+    private Random _random = new Random();
+
     /// <summary>
     /// Returneaza un element ales aleator din lista si il elimina. Returneaza null daca lista e goala.
     /// </summary>
     /// <param name="playables">Lista de elemente redabile.</param>
-    public IPlayable GetNextPlayable(List<IPlayable> playables)
+    public IPlayable? GetNextPlayable(List<IPlayable> playables)
     {
-        if (playables.Count == 0)
-        {
+        if (playables == null || playables.Count == 0)
             return null;
-        }
-        
-        int index = new Random().Next(0, playables.Count);
-        IPlayable song = playables[index];
-        playables.RemoveAt(index);
-        return song;
+
+        int index = _random.Next(playables.Count);
+        return playables[index];
     }
 }

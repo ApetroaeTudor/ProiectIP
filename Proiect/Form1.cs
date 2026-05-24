@@ -41,14 +41,20 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             colFileNamePlaylist.Name = "ColumnFileName";
             colFileNamePlaylist.Visible = false;
             dataGridViewPlaylist.Columns.Add(colFileNamePlaylist);
+            
+            var colFileNameQueue = new DataGridViewTextBoxColumn();
+            colFileNameQueue.Name = "ColumnFileName";
+            colFileNameQueue.Visible = false;
+            dataGridViewQueue.Columns.Add(colFileNameQueue);
+            dataGridViewQueue.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            _manager.SongStartedEvent += Manager_SongStartedEvent;
 
             // Legam butoanele de jos
             btnPlay.Click += btnPlay_Click;
             btnPause.Click += btnPause_Click;
             btnMute.Click += btnMute_Click;
             btnNext.Click += btnNext_Click;
-            // btnPrev.Click += btnPrev_Click;
 
             // Setam volumul initial la maxim
             trackBarVolume.Minimum = 0;
@@ -111,11 +117,40 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         #endregion
 
         #region CALLBACK-URI CONTROALE AUDIO
+        
+        private void Manager_SongStartedEvent(object? sender, SongInfo song)
+        {
+            if (dataGridViewQueue.InvokeRequired)
+            {
+                dataGridViewQueue.Invoke(() => Manager_SongStartedEvent(sender, song));
+                return;
+            }
 
+            try
+            {
+                if (!dataGridViewQueue.Columns.Contains("ColumnFileName")) return;
+
+                dataGridViewQueue.ClearSelection();
+        
+                foreach (DataGridViewRow row in dataGridViewQueue.Rows)
+                {
+                    if (row.IsNewRow) continue;
+            
+                    if (row.Cells["ColumnFileName"].Value?.ToString() == song.FileName)
+                    {
+                        row.Selected = true;
+                        break;
+                    }
+                }
+            }
+            catch 
+            {
+            }
+        }
+        
         private async void btnPlay_Click(object sender, EventArgs e)
         {
-            // Asta e codul pe care o sa l foloseasca callback-ul nu testul de mai jos , trebuie implementat hascurrentsong,resume, iar playnextsong exista deja
-            if (_manager.HasCurrentSong()) //TREBUIE IMPLEMENTAT
+            if (_manager.HasCurrentSong())
             {
                 _manager.Resume();
             }
@@ -123,40 +158,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             {
                 _manager.PlayNextSong();
             }
-
-            //partea de mai jos e tinuta momentan doar pentru verificarea celorlalte callback uri
-            // OpenFileDialog choofdlog = new OpenFileDialog();
-            // choofdlog.Filter = "AudioFile|*.wav;*.flac;*.mp3";
-            // choofdlog.FilterIndex = 1;
-            // choofdlog.Multiselect = false;
-            //
-            // string filePath = "";
-            // if (choofdlog.ShowDialog() == DialogResult.OK)
-            // {
-            //     filePath = choofdlog.FileName;
-            //     MessageBox.Show("Fișier selectat: " + filePath);
-            // }
-            //
-            // // Logica lor de simulare / testare piese
-            // _manager.AddSongToLibrary("01-fleetwood_mac-go_your_own_way.flac");
-            //
-            // var file1data = await FileReader.LoadSong("01-fleetwood_mac-go_your_own_way.flac");
-            // var file1Metadata = await FileProcessor.GetSongInfoAsync(file1data);
-            //
-            // var fileList = new List<SongInfo>();
-            // fileList.Add(file1Metadata);
-            //
-            // _manager.AddPlaylistToLibrary("Playlist2", fileList);
-            // _manager.AddPlaylistToLibrary("Playlist1", fileList);
-            // _manager.AddPlaylistToQueue("Playlist2");
-            //
-            // _manager.AdjustVolume(100);
-            // _manager.PlayNextSong();
-            // _manager.ChangeSongPosition(208);
-
         }
-
-
 
         private void btnMute_Click(object sender, EventArgs e)
         {
@@ -180,8 +182,26 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         private void SongFinishedHandler(object? obj, bool success)
         {
-             if (dataGridViewQueue.Rows.Count > 0 && !dataGridViewQueue.Rows[0].IsNewRow)
+            if (dataGridViewQueue.InvokeRequired)
+            {
+                dataGridViewQueue.Invoke(() => SongFinishedHandler(obj, success));
+                return;
+            }
+
+            if (textBoxStrategie.Text == "Repeat") return;
+
+            if (dataGridViewQueue.SelectedRows.Count > 0)
+            {
+                var row = dataGridViewQueue.SelectedRows[0];
+                if (!row.IsNewRow)
+                {
+                    dataGridViewQueue.Rows.Remove(row);
+                }
+            }
+            else if (dataGridViewQueue.Rows.Count > 0 && !dataGridViewQueue.Rows[0].IsNewRow)
+            {
                 dataGridViewQueue.Rows.RemoveAt(0);
+            }
         }
 
         #endregion
@@ -197,8 +217,6 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         {
             await _manager.SkipSong();
         }
-
-
 
         private async void btnAddFile_Click(object sender, EventArgs e)
         {
@@ -216,10 +234,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
                 // Verificam daca fisierul NU e deja in Media inainte sa copiem
                 string mediaFilePath = FileReader.GetSpecifiedDirPath(Path.GetFileName(filePath), "Media");
-                if (!File.Exists(mediaFilePath))
-                {
-                    await _manager.AddSongToLibrary(filePath);
-                }
+                await _manager.AddSongToLibrary(filePath);
 
                 // Adaugam randul si setam explicit ColumnFileName
                 int rowIndex = dataGridViewLibrary.Rows.Add(songInfo.SongTitle, songInfo.Artist,
@@ -274,8 +289,12 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             string title = selected.Cells[0].Value?.ToString() ?? "";
             string artist = selected.Cells[1].Value?.ToString() ?? "";
             string duration = selected.Cells[2].Value?.ToString() ?? "";
+    
             _manager.AddSongToQueue(fileName);
-            dataGridViewQueue.Rows.Add(title, artist, duration);
+    
+            int rowIndex = dataGridViewQueue.Rows.Add(title, artist, duration);
+            dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
+    
             _manager.PlayNextSong();
         }
 
@@ -287,8 +306,11 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             string title = selected.Cells[0].Value?.ToString() ?? "";
             string artist = selected.Cells[1].Value?.ToString() ?? "";
             string duration = selected.Cells[2].Value?.ToString() ?? "";
+    
             _manager.AddSongToQueue(fileName);
-            dataGridViewQueue.Rows.Add(title, artist, duration);
+    
+            int rowIndex = dataGridViewQueue.Rows.Add(title, artist, duration);
+            dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
         }
 
         private void toolStripMenuItemPlayNext_Click(object sender, EventArgs e)
@@ -300,7 +322,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             string artist = selected.Cells[1].Value?.ToString() ?? "";
             string duration = selected.Cells[2].Value?.ToString() ?? "";
             _manager.AddSongToQueue(fileName);
-            dataGridViewQueue.Rows.Add(title, artist, duration);
+            int rowIndex = dataGridViewQueue.Rows.Add(title, artist, duration);
+            dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
         }
 
         private void trackBarVolume_Scroll(object sender, EventArgs e)
@@ -514,25 +537,23 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private void btnAddPlaylistToQueue_Click(object sender, EventArgs e)
         {
             if (listBoxPlaylists.SelectedItem == null) return;
-
             string playlistName = listBoxPlaylists.SelectedItem.ToString() ?? "";
 
             try
             {
                 _manager.AddPlaylistToQueue(playlistName);
-
-                var songs = _manager.GetPlaylistSongs(playlistName); // TREBUIE IMPLEMENTAT
+                var songs = _manager.GetPlaylistSongs(playlistName); 
+        
                 foreach (var song in songs)
                 {
-                    dataGridViewQueue.Rows.Add(song.SongTitle, song.Artist,
-                        TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"), song.FileName);
+                    int rowIndex = dataGridViewQueue.Rows.Add(song.SongTitle, song.Artist, TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"));
+                    dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = song.FileName;
                 }
             }
             catch (MediaManagementException ex)
             {
                 MessageBox.Show(ex.Message, "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btnShuffle_Click(object sender, EventArgs e)
@@ -555,5 +576,6 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             textBoxStrategie.Text = "Sequential";
 
         }
+
     }
 }

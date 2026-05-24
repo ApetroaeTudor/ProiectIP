@@ -31,9 +31,13 @@ public class MediaManager : IDisposable
     private PlaybackQueue _queue;
     private SongRepository _songRepository;
     private PlaylistRepository _playlistRepository;
+    private bool _isSkipping = false;
+    private string _currentSong = string.Empty;
     
+    public string CurrentSong => _currentSong;
     public event EventHandler<PlaybackFailedException>? PlaybackErrorOccurred;
     public event EventHandler<PlaybackDoneException>? PlaybackDoneOcurred;
+    public event EventHandler<SongInfo>? SongStartedEvent;
     public event EventHandler<bool> SongFinishedEvent;
         
     /// <summary>
@@ -43,7 +47,13 @@ public class MediaManager : IDisposable
     {
         _queue = new PlaybackQueue();
         _playbackMaster = new PlaybackMaster();
-        _playbackMaster.OnSongEnded += PlayNextSong;
+        _playbackMaster.OnSongEnded += () =>
+        {
+            if (_isSkipping) return;
+    
+            SongFinishedEvent?.Invoke(this, true);
+            PlayNextSong();
+        };
         var connection = AppDbContext.Create();
         _songRepository = new SongRepository(connection);
         _playlistRepository = new PlaylistRepository(connection);
@@ -55,7 +65,6 @@ public class MediaManager : IDisposable
     public async void PlayNextSong()
     {
         IPlayable? next = _queue.GetNextPlayable();
-        SongFinishedEvent?.Invoke(this, true);
         if (next is null)
         {
             _playbackMaster.SongsLoaded = false;
@@ -77,7 +86,9 @@ public class MediaManager : IDisposable
             MediaSource songMediaSource = FileProcessor.GetMediaSource(songStorageFile);
             _playbackMaster.SetSource(songMediaSource);
             _playbackMaster.SongsLoaded = true;
+            _currentSong = songInfo.SongTitle;
             _playbackMaster.Play();
+            SongStartedEvent?.Invoke(this, songInfo); 
         }
         catch (PathBuildingException pathBuildingException)
         {
@@ -106,8 +117,13 @@ public class MediaManager : IDisposable
     /// </summary>
     public async Task SkipSong()
     {
-        _playbackMaster.Clear();
+        _isSkipping = true;
+        _playbackMaster.Pause();
+        SongFinishedEvent.Invoke(this, true);
         PlayNextSong();
+        await Task.Delay(100); 
+    
+        _isSkipping = false;
     }
 
     /// <summary>
