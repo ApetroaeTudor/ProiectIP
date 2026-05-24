@@ -11,6 +11,7 @@ using Common;
 using CustomExceptions;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
+using Windows.UI.WebUI;
 
 public class PlaylistRepository
 {
@@ -19,30 +20,70 @@ public class PlaylistRepository
 
     public PlaylistRepository(AppDbContext context)
     {
-        _context = context;
-        _playlists = _context.Playlists.Include(p => p.Songs).AsNoTracking().ToList();
+        try
+        {
+            _context = context;
+            _playlists = _context.Playlists.Include(p => p.Songs).AsNoTracking().ToList();
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseConnectionException("ERROR - eroare la creearea PlaylistRepo", ex);
+        }
     }
     /// <summary>
     /// Returnează playlistul cu id-ul dat ca parametru fără să acceseze baza de date
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public PlaylistInfo? GetPlaylistById(string id) =>
-        _playlists.FirstOrDefault(p => p.Id == id);
+    public PlaylistInfo? GetPlaylistById(string id)
+    {
+        try
+        {
+            return _playlists.FirstOrDefault(p => p.Id == id);
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la accesarea playlistului", ex);
+        }
+    }
+
     /// <summary>
     /// Returnează playlistul cu numele dat ca parametru fără să acceseze baza de date
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public PlaylistInfo? GetPlaylistByName(string name) =>
-        _playlists.FirstOrDefault(p => p.PlaylistName.Equals(name, StringComparison.OrdinalIgnoreCase));
+    public PlaylistInfo? GetPlaylistByName(string name)
+    {
+        try
+        {
+            return _playlists.FirstOrDefault(p => p.PlaylistName.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la accesarea playlistului", ex);
+        }
+    }
+
     /// <summary>
     /// Returnează cântecele din playlist fără să acceseze baza de date
     /// </summary>
     /// <param name="playlistId"></param>
     /// <returns></returns>
-    public List<SongInfo> GetSongsInPlaylist(string playlistId) =>
-        _playlists.FirstOrDefault(p => p.Id == playlistId)?.Songs.ToList() ?? new();
+    public List<SongInfo> GetSongsInPlaylist(string playlistId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(playlistId))
+                throw new ArgumentException("ID-ul playlistului nu poate fi gol", nameof(playlistId));
+
+            return _playlists.FirstOrDefault(p => p.Id == playlistId)?.Songs.ToList() ?? new();
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la accesarea cântecelor", ex);
+        }
+    }
+
     /// <summary>
     /// Adaugă asincron un playlist în baza de date
     /// </summary>
@@ -74,9 +115,9 @@ public class PlaylistRepository
                 _playlists.Add(playlist);
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            throw new DatabaseOperationException("ERROR - nu a reusit salvarea playlist-ului! ");
+            throw new DatabaseOperationException("ERROR - nu a reusit salvarea playlist-ului! ",ex);
         }
     }
     /// <summary>
@@ -88,41 +129,48 @@ public class PlaylistRepository
     /// <returns></returns>
     public async Task AddSongToPlaylist(string playlistId, string songId, SongRepository songRepo)
     {
-        var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
-        var song = songRepo.GetById(songId);
-
-        if (playlist is not null && song is not null)
+        try
         {
-            if (!playlist.Songs.Any(s => s.Id == songId))
+            var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
+            var song = songRepo.GetById(songId);
+
+            if (playlist is not null && song is not null)
             {
-                try 
+                if (!playlist.Songs.Any(s => s.Id == songId))
                 {
-                    if (_context.Entry(playlist).State == EntityState.Detached)
+                    try
                     {
-                        _context.Playlists.Attach(playlist);
-                    }
+                        if (_context.Entry(playlist).State == EntityState.Detached)
+                        {
+                            _context.Playlists.Attach(playlist);
+                        }
 
-                    if (_context.Entry(song).State == EntityState.Detached)
+                        if (_context.Entry(song).State == EntityState.Detached)
+                        {
+                            _context.Songs.Attach(song);
+                        }
+
+                        playlist.Songs.Add(song);
+
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
                     {
-                        _context.Songs.Attach(song);
+                        playlist.Songs.Remove(song);
+                        Console.WriteLine($"Eroare: {ex.Message}");
+                        throw;
                     }
-
-                    playlist.Songs.Add(song);
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    playlist.Songs.Remove(song);
-                    Console.WriteLine($"Eroare: {ex.Message}");
-                    throw;
-                }
-                finally
-                {
-                    _context.Entry(playlist).State = EntityState.Detached;
-                    _context.Entry(song).State = EntityState.Detached;
+                    finally
+                    {
+                        _context.Entry(playlist).State = EntityState.Detached;
+                        _context.Entry(song).State = EntityState.Detached;
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseConnectionException("ERROR - eroare de tip neidentificat", ex);
         }
     }
     /// <summary>
@@ -133,17 +181,24 @@ public class PlaylistRepository
     /// <returns></returns>
     public async Task RemoveSongFromPlaylist(string playlistId, string songId)
     {
-        var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
-        var song = playlist?.Songs.FirstOrDefault(s => s.Id == songId);
-
-        if (playlist is not null && song is not null)
+        try
         {
-            _context.Attach(playlist);                              
-            _context.Attach(song);                                  
-            playlist.Songs.Remove(song);
-            await _context.SaveChangesAsync();
-            _context.Entry(playlist).State = EntityState.Detached; 
-            _context.Entry(song).State = EntityState.Detached;     
+            var playlist = _playlists.FirstOrDefault(p => p.Id == playlistId);
+            var song = playlist?.Songs.FirstOrDefault(s => s.Id == songId);
+
+            if (playlist is not null && song is not null)
+            {
+                _context.Attach(playlist);
+                _context.Attach(song);
+                playlist.Songs.Remove(song);
+                await _context.SaveChangesAsync();
+                _context.Entry(playlist).State = EntityState.Detached;
+                _context.Entry(song).State = EntityState.Detached;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la ștergerea unui cântec", ex);
         }
     }
     /// <summary>
@@ -153,13 +208,20 @@ public class PlaylistRepository
     /// <returns></returns>
     public async Task RemovePlaylist(string id)
     {
-        var playlist = _playlists.FirstOrDefault(p => p.Id == id);
-        if (playlist is not null)
+        try
         {
-            _context.Attach(playlist);              
-            _context.Playlists.Remove(playlist);
-            await _context.SaveChangesAsync();
-            _playlists.Remove(playlist);
+            var playlist = _playlists.FirstOrDefault(p => p.Id == id);
+            if (playlist is not null)
+            {
+                _context.Attach(playlist);
+                _context.Playlists.Remove(playlist);
+                await _context.SaveChangesAsync();
+                _playlists.Remove(playlist);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la ștergerea unui playlist", ex);
         }
     }
     /// <summary>
@@ -168,13 +230,20 @@ public class PlaylistRepository
     /// <param name="songId"></param>
     public void RemoveSongFromMemory(string songId)
     {
-        foreach (var playlist in _playlists)
+        try
         {
-            var songToRemove = playlist.Songs.FirstOrDefault(s => s.Id == songId);
-            if (songToRemove != null)
+            foreach (var playlist in _playlists)
             {
-                playlist.Songs.Remove(songToRemove);
+                var songToRemove = playlist.Songs.FirstOrDefault(s => s.Id == songId);
+                if (songToRemove != null)
+                {
+                    playlist.Songs.Remove(songToRemove);
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            throw new DatabaseOperationException("ERROR - eroare la ștergerea unui cântec din memorie", ex);
         }
     }
 }

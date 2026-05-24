@@ -26,24 +26,31 @@ namespace Persistance
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SongInfo>(entity =>
+            try
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.SongTitle).HasMaxLength(200);
-                entity.Property(e => e.Artist).HasMaxLength(200);
-                entity.Property(e => e.Album).HasMaxLength(200);
-                entity.Property(e => e.FileName).HasMaxLength(500);
-            });
+                modelBuilder.Entity<SongInfo>(entity =>
+                {
+                    entity.HasKey(e => e.Id);
+                    entity.Property(e => e.SongTitle).HasMaxLength(200);
+                    entity.Property(e => e.Artist).HasMaxLength(200);
+                    entity.Property(e => e.Album).HasMaxLength(200);
+                    entity.Property(e => e.FileName).HasMaxLength(500);
+                });
 
-            modelBuilder.Entity<PlaylistInfo>(entity =>
+                modelBuilder.Entity<PlaylistInfo>(entity =>
+                {
+                    entity.HasKey(e => e.Id);
+                    entity.Property(e => e.PlaylistName).IsRequired().HasMaxLength(200);
+
+                    entity.HasMany(p => p.Songs)
+                          .WithMany()
+                          .UsingEntity("PlaylistSongs");
+                });
+            }
+            catch (Exception ex)
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.PlaylistName).IsRequired().HasMaxLength(200);
-
-                entity.HasMany(p => p.Songs)
-                      .WithMany()
-                      .UsingEntity("PlaylistSongs");
-            });
+                throw new DatabaseConnectionException("ERROR - eroare de tip neidentificat", ex);
+            }
         }
         /// <summary>
         /// Metoda fabrica
