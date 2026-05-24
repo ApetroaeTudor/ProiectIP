@@ -59,8 +59,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             // Setam volumul initial la maxim
             trackBarVolume.Minimum = 0;
             trackBarVolume.Maximum = 100;
-            trackBarVolume.Value = 100;
-            _manager.AdjustVolume(50);
+            trackBarVolume.Value = 50;
+            _manager.AdjustVolume(0.5);
 
             // Legam slider-ul
             trackBarVolume.Scroll += trackBarVolume_Scroll;
