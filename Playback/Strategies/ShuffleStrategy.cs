@@ -28,6 +28,11 @@ public class ShuffleStrategy : IPlaybackStrategy
             return null;
 
         int index = _random.Next(playables.Count);
-        return playables[index];
+        var itemToPlay = playables[index];
+
+        //Sterge elementul din lista dupa redare
+        playables.RemoveAt(index);
+
+        return itemToPlay;
     }
 }
