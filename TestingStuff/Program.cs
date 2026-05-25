@@ -1,6 +1,16 @@
-﻿using Core;
+﻿/**************************************************************************
+ *                                                                        *
+ *  File:         Program.cs                                              *
+ *  Copyright:    (c) 2026, Craciun Mara-Elena                            *
+ *  E-mail:       mara-elena.craciun@student.tuiasi.ro                    *
+ *  Description:  Fisier principal ce contine 27 de teste pe aspecte      *
+ *                legate de toate functionalitatile proiectului.          *
+ *                Toate testele au avut un rezultat afirmativ.            *
+ *                                                                        *
+ **************************************************************************/
+
+using Core;
 using CustomExceptions;
-using FileManagement;
 using Playback;
 using Playback.Playables;
 using Playback.Strategies;
