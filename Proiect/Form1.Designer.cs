@@ -90,6 +90,7 @@
             btnSequential = new Button();
             btnRepeat = new Button();
             btnShuffle = new Button();
+            btnHelp = new Button();
             panelNav.SuspendLayout();
             panelQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewQueue).BeginInit();
@@ -676,6 +677,7 @@
             // panelPlayback
             // 
             panelPlayback.BackColor = Color.LightSlateGray;
+            panelPlayback.Controls.Add(btnHelp);
             panelPlayback.Controls.Add(lblPlayingNow);
             panelPlayback.Controls.Add(label1);
             panelPlayback.Controls.Add(textBoxStrategie);
@@ -753,6 +755,16 @@
             btnShuffle.Text = "Shuffle";
             btnShuffle.UseVisualStyleBackColor = true;
             btnShuffle.Click += btnShuffle_Click;
+            // 
+            // btnHelp
+            // 
+            btnHelp.Location = new Point(1350, 99);
+            btnHelp.Name = "btnHelp";
+            btnHelp.Size = new Size(80, 35);
+            btnHelp.TabIndex = 7;
+            btnHelp.Text = "Help!";
+            btnHelp.UseVisualStyleBackColor = true;
+            btnHelp.Click += btnHelp_Click;
             // 
             // Form1
             // 
@@ -855,6 +867,7 @@
         private TextBox textBoxStrategie;
         private Label label1;
         private Label lblPlayingNow;
+        private Button btnHelp;
     }
 }
 

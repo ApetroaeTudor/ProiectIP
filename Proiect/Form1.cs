@@ -44,7 +44,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             colFileNamePlaylist.Name = "ColumnFileName";
             colFileNamePlaylist.Visible = false;
             dataGridViewPlaylist.Columns.Add(colFileNamePlaylist);
-            
+
             var colFileNameQueue = new DataGridViewTextBoxColumn();
             colFileNameQueue.Name = "ColumnFileName";
             colFileNameQueue.Visible = false;
@@ -118,7 +118,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             }
         }
 
-       
+
 
         #endregion
 
@@ -367,12 +367,12 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             string title = selected.Cells[0].Value?.ToString() ?? "";
             string artist = selected.Cells[1].Value?.ToString() ?? "";
             string duration = selected.Cells[2].Value?.ToString() ?? "";
-    
+
             _manager.AddSongToQueue(fileName);
-    
+
             int rowIndex = dataGridViewQueue.Rows.Add(title, artist, duration);
             dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
-    
+
             _manager.PlayNextSong();
         }
 
@@ -387,9 +387,9 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             string title = selected.Cells[0].Value?.ToString() ?? "";
             string artist = selected.Cells[1].Value?.ToString() ?? "";
             string duration = selected.Cells[2].Value?.ToString() ?? "";
-    
+
             _manager.AddSongToQueue(fileName);
-    
+
             int rowIndex = dataGridViewQueue.Rows.Add(title, artist, duration);
             dataGridViewQueue.Rows[rowIndex].Cells["ColumnFileName"].Value = fileName;
         }
@@ -671,8 +671,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
             try
             {
                 _manager.AddPlaylistToQueue(playlistName);
-                var songs = _manager.GetPlaylistSongs(playlistName); 
-        
+                var songs = _manager.GetPlaylistSongs(playlistName);
+
                 foreach (var song in songs)
                 {
                     int rowIndex = dataGridViewQueue.Rows.Add(song.SongTitle, song.Artist, TimeSpan.FromSeconds(song.DurationSecs).ToString(@"mm\:ss"));
@@ -715,5 +715,12 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
         }
 
+        /// <summary>
+        /// Display help menu.
+        /// </summary>
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
