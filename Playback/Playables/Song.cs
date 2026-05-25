@@ -1,4 +1,12 @@
-﻿using Common;
+﻿/*****************************************************************************************************
+ *                                                                                                   *
+ *  File:        IPlayable.cs                                                                        *
+ *  Copyright:   (c) 2026, Apetroae Tudor                                                            *
+ *  E-mail:      tudor.apetroae@student.tuiasi.ro                                                    *
+ *  Description: Clasa frunza in ierarhia Composite. Prezinta informatii despre un cantec            *
+ ****************************************************************************************************/
+
+using Common;
 using Playback.Strategies;
 
 namespace Playback.Playables;
