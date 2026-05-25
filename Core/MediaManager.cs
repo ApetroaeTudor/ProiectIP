@@ -299,7 +299,6 @@ public class MediaManager : IDisposable
         }
         catch (Exception ex)
         {
-            // throw new LibraryManagementException("ERROR - Problema la salvarea unui playlist! ", ex);
         }
     }
 

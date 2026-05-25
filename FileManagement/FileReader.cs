@@ -113,7 +113,6 @@ public static class FileReader
         }
         catch (ArgumentException argumentException)
         {
-            // TODO: daca citesc un empty string, trebuie handled special
             throw new PathBuildingException($"ERROR - argumente invalide trimise {argumentException.Message}", argumentException);
         }
         catch (IOException)

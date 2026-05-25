@@ -96,7 +96,6 @@ public class PlaybackMaster
     /// Seteaza sursa media pentru player.
     /// </summary>
     /// <param name="source">Sursa media de redat.</param>
-
     public void SetSource(MediaSource source)
     {
         _mediaPlayer.MediaEnded -= _mediaEndedHandler;
