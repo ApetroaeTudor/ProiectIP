@@ -84,13 +84,13 @@
             lblMinVol = new Label();
             lblMaxVol = new Label();
             panelPlayback = new Panel();
+            btnHelp = new Button();
             lblPlayingNow = new Label();
             label1 = new Label();
             textBoxStrategie = new TextBox();
             btnSequential = new Button();
             btnRepeat = new Button();
             btnShuffle = new Button();
-            btnHelp = new Button();
             panelNav.SuspendLayout();
             panelQueue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewQueue).BeginInit();
@@ -163,7 +163,7 @@
             panelQueue.Location = new Point(212, 0);
             panelQueue.Margin = new Padding(2);
             panelQueue.Name = "panelQueue";
-            panelQueue.Size = new Size(1248, 520);
+            panelQueue.Size = new Size(1324, 520);
             panelQueue.TabIndex = 2;
             // 
             // dataGridViewQueue
@@ -177,7 +177,7 @@
             dataGridViewQueue.ReadOnly = true;
             dataGridViewQueue.RowHeadersWidth = 51;
             dataGridViewQueue.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewQueue.Size = new Size(352, 348);
+            dataGridViewQueue.Size = new Size(383, 348);
             dataGridViewQueue.TabIndex = 12;
             // 
             // dataGridViewTextBoxColumn4
@@ -290,7 +290,7 @@
             TabControl.Controls.Add(tabPlaylists);
             TabControl.Dock = DockStyle.Right;
             TabControl.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0, true);
-            TabControl.ItemSize = new Size(20, 20);
+            TabControl.ItemSize = new Size(1, 1);
             TabControl.Location = new Point(17, 0);
             TabControl.Margin = new Padding(2);
             TabControl.Name = "TabControl";
@@ -305,11 +305,11 @@
             tabPageLibrary.Controls.Add(textBoxSearchBar);
             tabPageLibrary.Controls.Add(lblSearchBar);
             tabPageLibrary.Controls.Add(btnAddFile);
-            tabPageLibrary.Location = new Point(4, 24);
+            tabPageLibrary.Location = new Point(4, 5);
             tabPageLibrary.Margin = new Padding(2);
             tabPageLibrary.Name = "tabPageLibrary";
             tabPageLibrary.Padding = new Padding(2);
-            tabPageLibrary.Size = new Size(865, 492);
+            tabPageLibrary.Size = new Size(865, 511);
             tabPageLibrary.TabIndex = 0;
             tabPageLibrary.Text = "Library";
             tabPageLibrary.UseVisualStyleBackColor = true;
@@ -325,7 +325,7 @@
             dataGridViewLibrary.ReadOnly = true;
             dataGridViewLibrary.RowHeadersWidth = 51;
             dataGridViewLibrary.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewLibrary.Size = new Size(341, 362);
+            dataGridViewLibrary.Size = new Size(428, 362);
             dataGridViewLibrary.TabIndex = 6;
             // 
             // ColumnTitle
@@ -385,11 +385,11 @@
             // tabPlaylists
             // 
             tabPlaylists.Controls.Add(splitContainer1);
-            tabPlaylists.Location = new Point(4, 24);
+            tabPlaylists.Location = new Point(4, 5);
             tabPlaylists.Margin = new Padding(2);
             tabPlaylists.Name = "tabPlaylists";
             tabPlaylists.Padding = new Padding(2);
-            tabPlaylists.Size = new Size(865, 492);
+            tabPlaylists.Size = new Size(865, 511);
             tabPlaylists.TabIndex = 1;
             tabPlaylists.Text = "Playlists";
             tabPlaylists.UseVisualStyleBackColor = true;
@@ -417,16 +417,16 @@
             splitContainer1.Panel2.Controls.Add(buttonMoveDown);
             splitContainer1.Panel2.Controls.Add(buttonMoveUp);
             splitContainer1.Panel2.Controls.Add(labelPlaylistSongs);
-            splitContainer1.Size = new Size(861, 488);
+            splitContainer1.Size = new Size(861, 507);
             splitContainer1.SplitterDistance = 293;
             splitContainer1.TabIndex = 0;
             // 
             // btnAddPlaylistToQueue
             // 
-            btnAddPlaylistToQueue.Location = new Point(109, 200);
+            btnAddPlaylistToQueue.Location = new Point(12, 401);
             btnAddPlaylistToQueue.Margin = new Padding(3, 2, 3, 2);
             btnAddPlaylistToQueue.Name = "btnAddPlaylistToQueue";
-            btnAddPlaylistToQueue.Size = new Size(181, 30);
+            btnAddPlaylistToQueue.Size = new Size(181, 40);
             btnAddPlaylistToQueue.TabIndex = 5;
             btnAddPlaylistToQueue.Text = "AddPlaylistToQueue";
             btnAddPlaylistToQueue.UseVisualStyleBackColor = true;
@@ -444,10 +444,10 @@
             // 
             // buttonDeletePlaylist
             // 
-            buttonDeletePlaylist.Location = new Point(12, 257);
+            buttonDeletePlaylist.Location = new Point(128, 283);
             buttonDeletePlaylist.Margin = new Padding(4, 2, 4, 2);
             buttonDeletePlaylist.Name = "buttonDeletePlaylist";
-            buttonDeletePlaylist.Size = new Size(90, 39);
+            buttonDeletePlaylist.Size = new Size(90, 28);
             buttonDeletePlaylist.TabIndex = 3;
             buttonDeletePlaylist.Text = "-";
             buttonDeletePlaylist.UseVisualStyleBackColor = true;
@@ -455,7 +455,7 @@
             // 
             // buttonRenamePlaylist
             // 
-            buttonRenamePlaylist.Location = new Point(12, 203);
+            buttonRenamePlaylist.Location = new Point(12, 338);
             buttonRenamePlaylist.Margin = new Padding(4, 2, 4, 2);
             buttonRenamePlaylist.Name = "buttonRenamePlaylist";
             buttonRenamePlaylist.Size = new Size(90, 50);
@@ -466,7 +466,7 @@
             // 
             // buttonNewPlaylist
             // 
-            buttonNewPlaylist.Location = new Point(12, 165);
+            buttonNewPlaylist.Location = new Point(12, 283);
             buttonNewPlaylist.Margin = new Padding(4, 2, 4, 2);
             buttonNewPlaylist.Name = "buttonNewPlaylist";
             buttonNewPlaylist.Size = new Size(90, 28);
@@ -481,7 +481,7 @@
             listBoxPlaylists.Location = new Point(4, 33);
             listBoxPlaylists.Margin = new Padding(4, 2, 4, 2);
             listBoxPlaylists.Name = "listBoxPlaylists";
-            listBoxPlaylists.Size = new Size(214, 109);
+            listBoxPlaylists.Size = new Size(214, 235);
             listBoxPlaylists.TabIndex = 0;
             listBoxPlaylists.SelectedIndexChanged += listBoxPlaylists_SelectedIndexChanged;
             // 
@@ -496,7 +496,7 @@
             dataGridViewPlaylist.ReadOnly = true;
             dataGridViewPlaylist.RowHeadersWidth = 51;
             dataGridViewPlaylist.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewPlaylist.Size = new Size(306, 183);
+            dataGridViewPlaylist.Size = new Size(426, 366);
             dataGridViewPlaylist.TabIndex = 11;
             // 
             // dataGridViewTextBoxColumn1
@@ -525,7 +525,7 @@
             // 
             // buttonDeleteSongFromPlaylist
             // 
-            buttonDeleteSongFromPlaylist.Location = new Point(270, 219);
+            buttonDeleteSongFromPlaylist.Location = new Point(374, 417);
             buttonDeleteSongFromPlaylist.Margin = new Padding(4, 2, 4, 2);
             buttonDeleteSongFromPlaylist.Name = "buttonDeleteSongFromPlaylist";
             buttonDeleteSongFromPlaylist.Size = new Size(74, 39);
@@ -536,7 +536,7 @@
             // 
             // buttonMoveDown
             // 
-            buttonMoveDown.Location = new Point(127, 219);
+            buttonMoveDown.Location = new Point(222, 417);
             buttonMoveDown.Margin = new Padding(4, 2, 4, 2);
             buttonMoveDown.Name = "buttonMoveDown";
             buttonMoveDown.Size = new Size(111, 39);
@@ -547,7 +547,7 @@
             // 
             // buttonMoveUp
             // 
-            buttonMoveUp.Location = new Point(12, 219);
+            buttonMoveUp.Location = new Point(72, 417);
             buttonMoveUp.Margin = new Padding(4, 2, 4, 2);
             buttonMoveUp.Name = "buttonMoveUp";
             buttonMoveUp.Size = new Size(101, 39);
@@ -698,8 +698,18 @@
             panelPlayback.Location = new Point(0, 520);
             panelPlayback.Margin = new Padding(2);
             panelPlayback.Name = "panelPlayback";
-            panelPlayback.Size = new Size(1460, 140);
+            panelPlayback.Size = new Size(1536, 140);
             panelPlayback.TabIndex = 0;
+            // 
+            // btnHelp
+            // 
+            btnHelp.Location = new Point(1350, 99);
+            btnHelp.Name = "btnHelp";
+            btnHelp.Size = new Size(80, 35);
+            btnHelp.TabIndex = 7;
+            btnHelp.Text = "Help!";
+            btnHelp.UseVisualStyleBackColor = true;
+            btnHelp.Click += btnHelp_Click;
             // 
             // lblPlayingNow
             // 
@@ -756,21 +766,11 @@
             btnShuffle.UseVisualStyleBackColor = true;
             btnShuffle.Click += btnShuffle_Click;
             // 
-            // btnHelp
-            // 
-            btnHelp.Location = new Point(1350, 99);
-            btnHelp.Name = "btnHelp";
-            btnHelp.Size = new Size(80, 35);
-            btnHelp.TabIndex = 7;
-            btnHelp.Text = "Help!";
-            btnHelp.UseVisualStyleBackColor = true;
-            btnHelp.Click += btnHelp_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1460, 660);
+            ClientSize = new Size(1536, 660);
             Controls.Add(panelCentral);
             Controls.Add(panelQueue);
             Controls.Add(panelNav);
