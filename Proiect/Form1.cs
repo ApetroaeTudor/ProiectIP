@@ -720,6 +720,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         /// </summary>
         private void btnHelp_Click(object sender, EventArgs e)
         {
+            string helpPath = FileReader.GetSpecifiedDirPath("MusicPlayerUserHelp.chm", "Help");
+            Help.ShowHelp(this, helpPath);
 
         }
     }
