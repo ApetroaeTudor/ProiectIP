@@ -1,3 +1,12 @@
+/**************************************************************************************************
+ *                                                                                                *
+ *  File:        Form1.cs                                                                      *
+ *  Copyright:   (c) 2026, Mandache Toni                                                      *
+ *  E-mail:      toni.mandache@student.tuiasi.ro                                                 *
+ *  Description: Clasa pentru implementarea functionalitatii controalelor si elementelor de pe interfata *
+ *************************************************************************************************/
+
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +37,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         private MediaManager _manager = new MediaManager();
 
         /// <summary>
-        /// Initializes form components, hidden columns, event handlers, and default UI state.
+        /// Inițializează componentele formularului, coloanele ascunse, handlere de evenimente și starea implicită a interfeței.
+
         /// </summary>
         public Form1()
         {
@@ -86,7 +96,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Handles form load event. Reserved for future initialization logic.
+        /// Gestionează evenimentul de încărcare a formularului. Rezervat pentru logică de inițializare viitoare.
         /// </summary>
         private void Form1_Load_1(object sender, EventArgs e)
         {
@@ -97,7 +107,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         #region CALLBACK-URI NAVIGARE (Schimbarea paginilor din meniul stânga)
 
         /// <summary>
-        /// Navigates to the Library tab when the Library radio button is selected.
+        ///Navighează la tabul Library când butonul radio Library este selectat.
         /// </summary>
         private void radioButtonLibrary_CheckedChanged(object sender, EventArgs e)
         {
@@ -108,7 +118,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Navigates to the Playlists tab when the Playlists radio button is selected.
+        /// Navighează la tabul Playlists când butonul radio Playlists este selectat.
         /// </summary>
         private void radioButtonPlaylists_CheckedChanged(object sender, EventArgs e)
         {
@@ -125,39 +135,11 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         #region CALLBACK-URI CONTROALE AUDIO
 
         /// <summary>
-        /// Highlights the currently playing song row in the queue grid when a new song starts.
+        /// Evidențiază rândul melodiei care rulează în tabelul cozii când începe o melodie nouă.
         /// </summary>
         private void Manager_SongStartedEvent(object? sender, SongInfo song)
         {
-            //varianta fara label 
-            /*
-            if (dataGridViewQueue.InvokeRequired)
-            {
-                dataGridViewQueue.Invoke(() => Manager_SongStartedEvent(sender, song));
-                return;
-            }
-
-            try
-            {
-                if (!dataGridViewQueue.Columns.Contains("ColumnFileName")) return;
-
-                dataGridViewQueue.ClearSelection();
-        
-                foreach (DataGridViewRow row in dataGridViewQueue.Rows)
-                {
-                    if (row.IsNewRow) continue;
-            
-                    if (row.Cells["ColumnFileName"].Value?.ToString() == song.FileName)
-                    {
-                        row.Selected = true;
-                        break;
-                    }
-                }
-            }
-            catch 
-            {
-            }
-            */
+       
             if (dataGridViewQueue.InvokeRequired)
             {
                 dataGridViewQueue.Invoke(() => Manager_SongStartedEvent(sender, song));
@@ -189,7 +171,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Resumes playback if a song is loaded, otherwise plays the next song in the queue.
+        /// Reia redarea dacă există o melodie încărcată, altfel redă următoarea melodie din coadă.
         /// </summary>
         private async void btnPlay_Click(object sender, EventArgs e)
         {
@@ -204,7 +186,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Mutes the audio and resets the volume slider to zero.
+        /// Oprește sunetul și resetează slider-ul de volum la zero.
         /// </summary>
         private void btnMute_Click(object sender, EventArgs e)
         {
@@ -217,7 +199,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         #region HANDLERE EVENIMENTE BACKEND (Mesaje de eroare / info)
 
         /// <summary>
-        /// Displays a playback error message received from the backend.
+        /// Afișează un mesaj de eroare de redare primit din backend.
         /// </summary>
         private void PlaybackErrorHandler(object? obj, PlaybackFailedException playbackException)
         {
@@ -225,7 +207,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Displays an informational message when all songs in the queue have finished playing.
+        /// Afișează un mesaj informațional când toate melodiile din coadă au fost redate.
         /// </summary>
         private void PlaybackDoneHandler(object? obj, PlaybackDoneException playbackException)
         {
@@ -233,7 +215,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Removes the finished song from the queue grid. Skipped if Repeat strategy is active.
+        /// Șterge melodia terminată din tabelul cozii. Ignorat dacă strategia Repeat este activă.
         /// </summary>
         private void SongFinishedHandler(object? obj, bool success)
         {
@@ -262,7 +244,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         #endregion
 
         /// <summary>
-        /// Pauses the current playback.
+        /// Pune pe pauză redarea curentă.
         /// </summary>
         private void btnPause_Click(object sender, EventArgs e)
         {
@@ -270,7 +252,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Skips the current song and plays the next one in the queue.
+        /// Sare peste melodia curentă și o redă pe următoarea din coadă.
         /// </summary>
         private async void btnNext_Click(object sender, EventArgs e)
         {
@@ -278,7 +260,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Opens a file dialog, loads the selected audio file into the library and displays it in the grid.
+        /// Deschide un dialog de fișiere, încarcă fișierul audio selectat în bibliotecă și îl afișează în tabel.
         /// </summary>
         private async void btnAddFile_Click(object sender, EventArgs e)
         {
@@ -323,7 +305,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Filters the library grid based on the text entered in the search bar.
+        /// Filtrează tabelul bibliotecii pe baza textului introdus în bara de căutare.
         /// </summary>
         private void lblSearchBar_Click(object sender, EventArgs e)
         {
@@ -342,7 +324,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Removes the selected song from the library grid.
+        /// Șterge melodia selectată din tabelul bibliotecii.
+
         /// </summary>
         private void btnRemove_Click(object sender, EventArgs e)
         {
@@ -357,7 +340,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         //callback uri pentru stripmenuitem uri
 
         /// <summary>
-        /// Adds the selected song to the queue and begins immediate playback.
+        ///Adaugă melodia selectată în coadă și începe redarea imediată.
+
         /// </summary>
         private void toolStripMenuItemPlay_Click(object sender, EventArgs e)
         {
@@ -377,7 +361,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Adds the selected song to the end of the playback queue.
+        /// Adaugă melodia selectată la sfârșitul cozii de redare.
+
         /// </summary>
         private void toolStripMenuItemAddToQueue_Click(object sender, EventArgs e)
         {
@@ -395,7 +380,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Adds the selected song to the playback queue to be played next.
+        /// Adaugă melodia selectată în coada de redare pentru a fi redată următoarea.
         /// </summary>
         private void toolStripMenuItemPlayNext_Click(object sender, EventArgs e)
         {
@@ -411,7 +396,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Adjusts the playback volume based on the volume slider position.
+        ///  Ajustează volumul redării în funcție de poziția slider-ului de volum.
         /// </summary>
         private void trackBarVolume_Scroll(object sender, EventArgs e)
         {
@@ -420,7 +405,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Adds the selected song to a user-specified playlist chosen via an input dialog.
+        /// Adaugă melodia selectată într-un playlist specificat de utilizator, ales printr-un dialog de introducere.
         /// </summary>
         private async void toolStripMenuItemAddToPlaylist_Click(object sender, EventArgs e)
         {
@@ -454,7 +439,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Removes the selected song from the library, both in the UI and the database.
+        /// Șterge melodia selectată din bibliotecă, atât din interfață cât și din baza de date.
         /// </summary>
         private void toolStripMenuItemRemoveFromPlaylist_Click(object sender, EventArgs e)//defapt e from library a fost un name gresit
         {
@@ -474,7 +459,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Clears all songs from the playback queue in both the backend and the UI.
+        /// Golește toate melodiile din coada de redare atât din backend cât și din interfață.
         /// </summary>
         private void buttonClearQueue_Click(object sender, EventArgs e)
         {
@@ -483,7 +468,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Removes the selected song from the playback queue grid.
+        /// Șterge melodia selectată din tabelul cozii de redare.
         /// </summary>
         private void btnRemoveQueue_Click(object sender, EventArgs e)
         {
@@ -495,7 +480,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Creates a new playlist with the name provided by the user via an input dialog.
+        /// Creează un playlist nou cu numele furnizat de utilizator printr-un dialog de introducere.
         /// </summary>
         private async void buttonNewPlaylist_Click(object sender, EventArgs e)
         {
@@ -509,7 +494,8 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Renames the selected playlist using a new name provided by the user via an input dialog.
+        /// Redenumește playlistul selectat folosind un nume nou furnizat de utilizator printr-un dialog de introducere.
+
         /// </summary>
         private async void buttonRenamePlaylist_Click(object sender, EventArgs e)
         {
@@ -526,7 +512,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Deletes the selected playlist from the database and removes it from the UI.
+        /// Șterge playlistul selectat din baza de date și îl elimină din interfață.
         /// </summary>
         private async void buttonDeletePlaylist_Click(object sender, EventArgs e)
         {
@@ -540,7 +526,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Moves the selected song one position up in the playlist grid.
+        ///  Mută melodia selectată cu o poziție în sus în tabelul playlistului.
         /// </summary>
         private void buttonMoveUp_Click(object sender, EventArgs e)
         {
@@ -563,7 +549,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
 
 
         /// <summary>
-        /// Moves the selected song one position down in the playlist grid.
+        /// Mută melodia selectată cu o poziție în jos în tabelul playlistului.
         /// </summary>
         private void buttonMoveDown_Click(object sender, EventArgs e)
         {
@@ -584,7 +570,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Removes the selected song from the current playlist in both the database and the UI.
+        /// Șterge melodia selectată din playlistul curent atât din baza de date cât și din interfață.
         /// </summary>
         private async void buttonDeleteSongFromPlaylist_Click(object sender, EventArgs e)
         {
@@ -600,7 +586,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Loads and displays the songs of the selected playlist in the playlist grid.
+        /// Încarcă și afișează melodiile playlistului selectat în tabelul playlistului.
         /// </summary>
         private void listBoxPlaylists_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -630,7 +616,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Updates the seek bar and time labels every second based on the current playback position.
+        ///  Actualizează bara de progres și etichetele de timp în fiecare secundă pe baza poziției curente de redare.
         /// </summary>
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -651,7 +637,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Seeks to the position indicated by the seek bar when the user drags it.
+        /// Sare la poziția indicată de bara de progres când utilizatorul o trage.
         /// </summary>
         private void trackBarSeek_Scroll(object sender, EventArgs e)
         {
@@ -661,7 +647,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Adds all songs from the selected playlist to the playback queue.
+        ///  Adaugă toate melodiile din playlistul selectat în coada de redare.
         /// </summary>
         private void btnAddPlaylistToQueue_Click(object sender, EventArgs e)
         {
@@ -686,7 +672,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Activates shuffle playback strategy and updates the strategy display.
+        /// Activează strategia de redare aleatoare și actualizează afișajul strategiei.
         /// </summary>
         private void btnShuffle_Click(object sender, EventArgs e)
         {
@@ -696,7 +682,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Activates repeat playback strategy and updates the strategy display.
+        /// Activează strategia de repetare și actualizează afișajul strategiei.
         /// </summary>
         private void btnRepeat_Click(object sender, EventArgs e)
         {
@@ -706,7 +692,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Activates sequential playback strategy and updates the strategy display.
+        /// Activează strategia de redare secvențială și actualizează afișajul strategiei.
         /// </summary>
         private void btnSequential_Click(object sender, EventArgs e)
         {
@@ -716,7 +702,7 @@ namespace Proiect_Ip // NU SCHIMBATI NAMESPACE UL, se strica iar interfata
         }
 
         /// <summary>
-        /// Display help menu.
+        /// Afișează meniul de ajutor.
         /// </summary>
         private void btnHelp_Click(object sender, EventArgs e)
         {
