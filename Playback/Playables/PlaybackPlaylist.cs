@@ -1,4 +1,12 @@
-﻿using Common;
+﻿/*****************************************************************************************************
+ *                                                                                                   *
+ *  File:        IPlayable.cs                                                                        *
+ *  Copyright:   (c) 2026, Apetroae Tudor                                                            *
+ *  E-mail:      tudor.apetroae@student.tuiasi.ro                                                    *
+ *  Description: Clasa folosita pentru gestionarea cantecelor in playlist-uri                        *
+ ****************************************************************************************************/
+
+using Common;
 using Playback.Strategies;
 using System.Collections.Generic;
 
