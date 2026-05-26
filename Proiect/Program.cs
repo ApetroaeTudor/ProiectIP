@@ -1,6 +1,17 @@
+/************************************************************************************
+ *                                                                                  *
+ *  File:        Program.cs                                                         *
+ *  Copyright:   (c) 2026, Apetroae Tudor                                           *
+ *  E-mail:      tudor.apetroae@student.tuiasi.ro                                   *
+ *  Description: Punctul de inceput al programului. Contine handlers globale        *
+ *               pentru unele exceptii                                              *
+ ************************************************************************************/
+
+
 using System;
 using System.Threading;
 using System.Windows.Forms;
+
 using CustomExceptions;
 
 namespace Proiect_Ip
